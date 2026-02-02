@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  name      String?
+  phone     String?
+  password  String
+  address   String?
+  city      String?
+  state     String?
+  pincode   String?
+  role      String     @default("USER")
+  createdAt DateTime   @default(now())
+  orders    Order[]
+  wishlist  Wishlist[]
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String    @unique
+  image    String?
+  enabled  Boolean   @default(true)
+  products Product[]
+}
+
+model Brand {
+  id       String    @id @default(cuid())
+  name     String
+  logo     String?
+  type     String    @default("THIRD_PARTY")
+  status   Boolean   @default(true)
+  products Product[]
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  description String
+  price       Float
+  discount    Float       @default(0)
+  stock       Int         @default(0)
+  images      String
+  ageGroup    String
+  safetyInfo  String?
+  status      Boolean     @default(true)
+  featured    Boolean     @default(false)
+  soldCount   Int         @default(0)
+  categoryId  String
+  brandId     String
+  createdAt   DateTime    @default(now())
+  orderItems  OrderItem[]
+  brand       Brand       @relation(fields: [brandId], references: [id])
+  category    Category    @relation(fields: [categoryId], references: [id])
+  wishlist    Wishlist[]
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderId         String      @unique
+  totalAmount     Float
+  status          String      @default("PENDING")
+  paymentMode     String
+  shippingAddress String
+  userId          String
+  createdAt       DateTime    @default(now())
+  user            User        @relation(fields: [userId], references: [id])
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  quantity  Int
+  price     Float
+  orderId   String
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id])
+}
+
+model Banner {
+  id        String   @id @default(cuid())
+  title     String
+  subtitle  String?
+  image     String
+  link      String?
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Wishlist {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId])
+}
