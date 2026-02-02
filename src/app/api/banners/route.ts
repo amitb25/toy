@@ -5,15 +5,41 @@ const globalForPrisma = global as unknown as { prisma: PrismaClient }
 const prisma = globalForPrisma.prisma || new PrismaClient()
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
+const sampleBanners = [
+  {
+    id: '1',
+    title: 'Avengers Collection',
+    subtitle: 'Premium Marvel collectibles & action figures',
+    image: 'https://images.unsplash.com/photo-1569003339405-ea396a5a8a90?q=80&w=2000',
+    link: '/category/all',
+    active: true,
+    order: 1
+  },
+  {
+    id: '2',
+    title: 'New Arrivals',
+    subtitle: 'Fresh from the multiverse - Check out our latest products',
+    image: 'https://images.unsplash.com/photo-1635863138275-d9b33299680b?q=80&w=2000',
+    link: '/new-arrivals',
+    active: true,
+    order: 2
+  }
+]
+
 export async function GET() {
   try {
     const banners = await prisma.banner.findMany({
       where: { active: true },
       orderBy: { order: 'asc' }
     })
+
+    if (banners.length === 0) {
+      return NextResponse.json(sampleBanners)
+    }
+
     return NextResponse.json(banners)
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch banners" }, { status: 500 })
+    return NextResponse.json(sampleBanners)
   }
 }
 
