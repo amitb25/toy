@@ -1,17 +1,12 @@
 'use client'
 
-import { ChevronDown, ArrowLeft, Grid, Filter } from 'lucide-react'
-import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { ArrowLeft, Sparkles, Filter, ChevronDown } from 'lucide-react'
 import ProductCard from '@/components/ProductCard'
 import QuickView from '@/components/QuickView'
 
-export default function CategoryPage() {
-  const params = useParams()
-  const slug = params?.slug as string || 'all'
-
-  const [category, setCategory] = useState<any>(null)
+export default function NewArrivalsPage() {
   const [products, setProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [quickViewProduct, setQuickViewProduct] = useState<any>(null)
@@ -19,55 +14,34 @@ export default function CategoryPage() {
   const [showSortDropdown, setShowSortDropdown] = useState(false)
 
   useEffect(() => {
-    async function fetchData() {
+    const fetchProducts = async () => {
       try {
-        // Fetch categories to find the category by ID or name
-        const catRes = await fetch('/api/categories')
-        const catData = await catRes.json()
-
-        let foundCategory = null
-        if (Array.isArray(catData) && slug !== 'all') {
-          foundCategory = catData.find((c: any) =>
-            c.id === slug ||
-            c.name.toLowerCase().replace(/\s+/g, '-') === slug.toLowerCase()
-          )
-          setCategory(foundCategory)
-        }
-
-        // Fetch products
         const res = await fetch('/api/products')
         const data = await res.json()
         if (Array.isArray(data)) {
-          let filtered = data
-          if (slug !== 'all') {
-            filtered = data.filter((p: any) => {
-              if (foundCategory) {
-                return p.categoryId === foundCategory.id || p.category?.name === foundCategory.name
-              }
-              return p.category?.name?.toLowerCase().replace(/\s+/g, '-') === slug.toLowerCase() ||
-                     (slug === 'exclusives' && p.brand?.type === 'OWN')
-            })
-          }
-          setProducts(filtered)
+          const sorted = data.sort((a: any, b: any) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          )
+          setProducts(sorted)
         }
       } catch (error) {
-        console.error("Failed to fetch products", error)
+        console.error('Error fetching products:', error)
       } finally {
         setLoading(false)
       }
     }
-    fetchData()
-  }, [slug])
+    fetchProducts()
+  }, [])
 
-  const categoryName = category?.name || (slug === 'all' ? 'All Products' : slug.replace(/-/g, ' '))
-
-  // Sort products
   const sortedProducts = [...products].sort((a, b) => {
     switch (sortBy) {
-      case 'price-low': return (a.price - a.discount) - (b.price - b.discount)
-      case 'price-high': return (b.price - b.discount) - (a.price - a.discount)
-      case 'newest': return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      default: return 0
+      case 'price-low':
+        return (a.price - a.discount) - (b.price - b.discount)
+      case 'price-high':
+        return (b.price - b.discount) - (a.price - a.discount)
+      case 'newest':
+      default:
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     }
   })
 
@@ -76,7 +50,7 @@ export default function CategoryPage() {
       <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-3 border-[var(--sand)]/20 border-t-[var(--sand)] rounded-full animate-spin" />
-          <p className="text-[var(--text-muted)] text-sm">Loading products...</p>
+          <p className="text-[var(--text-muted)] text-sm">Loading new arrivals...</p>
         </div>
       </div>
     )
@@ -84,37 +58,26 @@ export default function CategoryPage() {
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
-      {/* Hero Section - Light mode compatible */}
+      {/* Hero Section */}
       <section className="relative bg-[var(--bg-secondary)] py-10 md:py-24 border-b border-[var(--border-light)]">
-        {/* Category Image Background (if available) */}
-        {category?.image && (
-          <div className="absolute inset-0 opacity-10">
-            <img src={category.image} alt="" className="w-full h-full object-cover" />
-          </div>
-        )}
-
         <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <Link href="/categories" className="inline-flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--sand)] transition-colors mb-6 md:mb-8 group">
+          <Link href="/" className="inline-flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--sand)] transition-colors mb-6 md:mb-8 group">
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-            <span className="text-xs md:text-sm font-medium">All Categories</span>
+            <span className="text-xs md:text-sm font-medium">Back to Home</span>
           </Link>
 
           <div className="text-center">
             <div className="inline-flex items-center gap-2 md:gap-3 border border-[var(--sand)]/30 bg-[var(--sand)]/10 rounded-full px-4 md:px-6 py-2 md:py-3 mb-6 md:mb-8">
-              <Grid size={14} className="text-[var(--sand)]" />
-              <span className="text-[var(--sand)] text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em]">Category</span>
+              <Sparkles size={14} className="text-[var(--sand)]" />
+              <span className="text-[var(--sand)] text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em]">Fresh Drops</span>
             </div>
 
-            <h1 className="text-3xl md:text-6xl lg:text-7xl font-thin text-[var(--text-primary)] tracking-tight mb-4 md:mb-6 capitalize">
-              {slug === 'all' ? (
-                <>All <span className="font-bold text-[var(--sand)]">Products</span></>
-              ) : (
-                <span className="font-bold text-[var(--sand)]">{categoryName}</span>
-              )}
+            <h1 className="text-3xl md:text-6xl lg:text-7xl font-thin text-[var(--text-primary)] tracking-tight mb-4 md:mb-6">
+              New <span className="font-bold text-[var(--sand)]">Arrivals</span>
             </h1>
 
             <p className="text-[var(--text-muted)] text-sm md:text-lg max-w-xl mx-auto">
-              {sortedProducts.length} {sortedProducts.length === 1 ? 'product' : 'products'} available
+              Be the first to discover our latest collection of premium products
             </p>
           </div>
         </div>
@@ -126,7 +89,7 @@ export default function CategoryPage() {
           {/* Toolbar */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10">
             <p className="text-[var(--text-muted)] text-sm">
-              Showing {sortedProducts.length} products
+              Showing {sortedProducts.length} new products
             </p>
 
             {/* Sort Dropdown */}
@@ -178,17 +141,7 @@ export default function CategoryPage() {
             </div>
           ) : (
             <div className="text-center py-20">
-              <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-[var(--sand)]/10 flex items-center justify-center">
-                <Grid size={40} className="text-[var(--sand)]" />
-              </div>
-              <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">No Products Found</h3>
-              <p className="text-[var(--text-muted)] mb-6">No products available in this category yet.</p>
-              <Link
-                href="/category/all"
-                className="inline-flex items-center gap-2 bg-[var(--sand)] text-white px-6 py-3 rounded-full font-semibold hover:bg-[var(--sand)]/90 transition-colors"
-              >
-                Browse All Products
-              </Link>
+              <p className="text-[var(--text-muted)] text-lg">No new arrivals yet. Check back soon!</p>
             </div>
           )}
         </div>

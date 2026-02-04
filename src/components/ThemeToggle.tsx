@@ -14,8 +14,8 @@ export default function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button className="p-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)]">
-        <div className="w-5 h-5" />
+      <button className="p-2">
+        <div className="w-[18px] h-[18px]" />
       </button>
     )
   }
@@ -23,13 +23,13 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)] hover:border-[var(--accent)] transition-all group"
+      className="p-2 text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
       {theme === 'dark' ? (
-        <Sun size={20} className="text-yellow-500 group-hover:rotate-180 transition-transform duration-500" />
+        <Sun size={18} strokeWidth={1.5} className="hover:rotate-180 transition-transform duration-500" />
       ) : (
-        <Moon size={20} className="text-[var(--accent)] group-hover:rotate-12 transition-transform duration-300" />
+        <Moon size={18} strokeWidth={1.5} className="hover:rotate-12 transition-transform duration-300" />
       )}
     </button>
   )

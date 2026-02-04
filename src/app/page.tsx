@@ -1,24 +1,30 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowLeft, ArrowRight, Award, Star, ChevronLeft, ChevronRight, Flame, Sparkles, TrendingUp, Tag } from 'lucide-react'
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import ProductCard from '@/components/ProductCard'
 import QuickView from '@/components/QuickView'
+import CategorySlider from '@/components/CategorySlider'
+import BrandSlider from '@/components/BrandSlider'
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
   const [products, setProducts] = useState<any[]>([])
+  const [categories, setCategories] = useState<any[]>([])
   const [brands, setBrands] = useState<any[]>([])
   const [banners, setBanners] = useState<any[]>([])
+  const [bannerCTAs, setBannerCTAs] = useState<any[]>([])
   const [currentBanner, setCurrentBanner] = useState(0)
   const [quickViewProduct, setQuickViewProduct] = useState<any>(null)
 
   useEffect(() => {
     setMounted(true)
     fetch('/api/products').then(res => res.json()).then(data => Array.isArray(data) ? setProducts(data) : setProducts([])).catch(console.error)
+    fetch('/api/categories').then(res => res.json()).then(data => Array.isArray(data) ? setCategories(data) : setCategories([])).catch(console.error)
     fetch('/api/brands').then(res => res.json()).then(data => Array.isArray(data) ? setBrands(data) : setBrands([])).catch(console.error)
     fetch('/api/banners').then(res => res.json()).then(data => Array.isArray(data) ? setBanners(data) : setBanners([])).catch(console.error)
+    fetch('/api/banner-cta').then(res => res.json()).then(data => Array.isArray(data) ? setBannerCTAs(data) : setBannerCTAs([])).catch(console.error)
   }, [])
 
   // Auto-rotate banners
@@ -33,29 +39,70 @@ export default function Home() {
 
   if (!mounted) return null
 
-  const featuredProducts = products.filter(p => p.featured)
+  // Get own brand (type === 'OWN')
+  const ownBrand = brands.find(b => b.type === 'OWN')
+  const ownBrandProducts = products.filter(p => p.brand?.type === 'OWN')
   const newArrivals = [...products].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 8)
-  const bestSellers = [...products].sort((a, b) => b.soldCount - a.soldCount).slice(0, 8)
-  const dealsProducts = products.filter(p => p.discount > 0).slice(0, 6)
-  const ownBrandProducts = products.filter(p => p.brand?.type === 'OWN').slice(0, 4)
+  const activeCategories = categories.filter(c => c.enabled)
+
+  // All products grouped by brand for "Shop by Brands" section
+  const allBrands = brands.filter(b => b.status)
+  const productsByBrand = allBrands.map(brand => ({
+    brand,
+    products: products.filter(p => p.brandId === brand.id)
+  })).filter(item => item.products.length > 0)
 
   const nextBanner = () => setCurrentBanner((prev) => (prev + 1) % banners.length)
   const prevBanner = () => setCurrentBanner((prev) => (prev - 1 + banners.length) % banners.length)
 
   return (
-    <div className="bg-[var(--bg-primary)] min-h-screen text-[var(--text-primary)] font-sans">
+    <div className="bg-[var(--bg-primary)] min-h-screen text-[var(--text-primary)]">
 
       {/* 1. HERO BANNER SLIDER */}
-      <section className="relative h-[350px] md:h-[500px] lg:h-[700px] w-full overflow-hidden">
+      <section className="relative h-[350px] md:h-[550px] lg:h-[700px] w-full overflow-hidden bg-[var(--obsidian)]">
+        {/* Animated Background Pattern */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,var(--crimson)_0%,transparent_50%)] animate-pulse" style={{ animationDuration: '4s' }} />
+          <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_50%,var(--sand)_0%,transparent_50%)] animate-pulse" style={{ animationDuration: '6s', animationDelay: '2s' }} />
+        </div>
+
         {banners.length === 0 ? (
           <div className="absolute inset-0">
-            <img src="https://images.unsplash.com/photo-1569003339405-ea396a5a8a90?q=80&w=2000" className="w-full h-full object-cover" alt="Hero" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-black/50 to-transparent" />
+            <img
+              src="https://images.unsplash.com/photo-1569003339405-ea396a5a8a90?q=80&w=2000"
+              className="w-full h-full object-cover scale-105 animate-[kenburns_20s_ease-in-out_infinite_alternate]"
+              alt="Hero"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[var(--obsidian)] via-[var(--obsidian)]/70 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--obsidian)]/50 via-transparent to-transparent" />
             <div className="absolute inset-0 flex items-center">
               <div className="container mx-auto px-4 md:px-6">
-                <h1 className="text-2xl md:text-5xl lg:text-7xl font-black text-white uppercase tracking-tighter mb-2 md:mb-4">Avengers Collection</h1>
-                <p className="text-[var(--text-secondary)] text-sm md:text-lg lg:text-xl mb-4 md:mb-8">Premium Marvel collectibles & action figures</p>
-                <Link href="/category/all" className="inline-block bg-[var(--accent)] text-white px-6 py-3 md:px-8 md:py-4 font-black uppercase text-xs md:text-sm tracking-wider hover:bg-white hover:text-[var(--accent)] transition-all rounded-lg">Shop Now</Link>
+                <div className="max-w-3xl">
+                  <div className="inline-flex items-center gap-3 bg-[var(--sand)]/10 backdrop-blur-md border border-[var(--sand)]/30 rounded-full px-5 py-2.5 mb-6 animate-[fadeInUp_0.8s_ease-out]">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--sand)] opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--sand)]"></span>
+                    </span>
+                    <span className="text-[var(--sand)] text-xs font-bold uppercase tracking-[0.3em]">Premium Collection</span>
+                  </div>
+                  <h1 className="text-4xl md:text-6xl lg:text-8xl font-extralight text-[var(--pearl)] tracking-tight mb-4 md:mb-6 leading-[1.1] animate-[fadeInUp_0.8s_ease-out_0.2s_both]">
+                    Discover Our <br />
+                    <span className="font-black bg-gradient-to-r from-[var(--sand)] via-[var(--crimson)] to-[var(--sand)] bg-clip-text text-transparent bg-[length:200%_auto] animate-[shimmer_3s_linear_infinite]">Exclusive</span> Range
+                  </h1>
+                  <p className="text-[var(--pearl)]/60 text-base md:text-xl mb-8 md:mb-10 max-w-xl leading-relaxed animate-[fadeInUp_0.8s_ease-out_0.4s_both]">
+                    Curated selection of premium products for the discerning collector
+                  </p>
+                  <div className="flex flex-wrap gap-4 animate-[fadeInUp_0.8s_ease-out_0.6s_both]">
+                    <Link href="/category/all" className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)] hover:scale-105">
+                      <span className="absolute inset-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
+                      <span className="relative">Shop Now</span>
+                      <ArrowRight size={16} className="relative group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                    <Link href="/category/all" className="inline-flex items-center gap-3 border-2 border-[var(--pearl)]/30 text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-semibold uppercase text-xs md:text-sm tracking-wider hover:border-[var(--sand)] hover:text-[var(--sand)] transition-all duration-300 backdrop-blur-sm">
+                      Explore More
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -64,305 +111,271 @@ export default function Home() {
             {banners.map((banner, index) => (
               <div
                 key={banner.id}
-                className={`absolute inset-0 transition-opacity duration-1000 ${index === currentBanner ? 'opacity-100' : 'opacity-0'}`}
+                className={`absolute inset-0 transition-all duration-1000 ${index === currentBanner ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
               >
-                <img src={banner.image} className="w-full h-full object-cover" alt={banner.title} />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-black/50 to-transparent" />
+                <img
+                  src={banner.image}
+                  className={`w-full h-full object-cover transition-transform duration-[8000ms] ease-out ${index === currentBanner ? 'scale-110' : 'scale-100'}`}
+                  alt={banner.title}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-[var(--obsidian)] via-[var(--obsidian)]/60 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--obsidian)]/60 via-transparent to-[var(--obsidian)]/20" />
+
+                {/* Decorative Elements */}
+                <div className="absolute top-1/4 right-10 w-32 h-32 border border-[var(--sand)]/20 rounded-full animate-[spin_20s_linear_infinite] hidden lg:block" />
+                <div className="absolute bottom-1/4 right-20 w-20 h-20 border border-[var(--crimson)]/20 rounded-full animate-[spin_15s_linear_infinite_reverse] hidden lg:block" />
+
                 <div className="absolute inset-0 flex items-center">
                   <div className="container mx-auto px-4 md:px-6">
-                    <h1 className="text-2xl md:text-5xl lg:text-7xl font-black text-white uppercase tracking-tighter mb-2 md:mb-4 max-w-3xl">{banner.title}</h1>
-                    <p className="text-[var(--text-secondary)] text-sm md:text-lg lg:text-xl mb-4 md:mb-8 max-w-xl">{banner.subtitle}</p>
-                    <Link href={banner.link || '/category/all'} className="inline-block bg-[var(--accent)] text-white px-6 py-3 md:px-8 md:py-4 font-black uppercase text-xs md:text-sm tracking-wider hover:bg-white hover:text-[var(--accent)] transition-all rounded-lg">Shop Now</Link>
+                    <div className={`max-w-3xl transition-all duration-700 ${index === currentBanner ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+                      <div className="inline-flex items-center gap-3 bg-[var(--sand)]/10 backdrop-blur-md border border-[var(--sand)]/30 rounded-full px-5 py-2.5 mb-6">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--sand)] opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--sand)]"></span>
+                        </span>
+                        <span className="text-[var(--sand)] text-xs font-bold uppercase tracking-[0.3em]">Featured</span>
+                      </div>
+                      <h1 className="text-4xl md:text-6xl lg:text-8xl font-extralight text-[var(--pearl)] tracking-tight mb-4 md:mb-6 leading-[1.1]">
+                        {banner.title?.split(' ').map((word: string, i: number) => (
+                          <span key={i} className={i === 1 ? 'font-black bg-gradient-to-r from-[var(--sand)] via-[var(--crimson)] to-[var(--sand)] bg-clip-text text-transparent bg-[length:200%_auto] animate-[shimmer_3s_linear_infinite]' : ''}>
+                            {word}{' '}
+                          </span>
+                        ))}
+                      </h1>
+                      <p className="text-[var(--pearl)]/60 text-base md:text-xl mb-8 md:mb-10 max-w-xl leading-relaxed">{banner.subtitle}</p>
+                      <div className="flex flex-wrap gap-4">
+                        <Link href={banner.link || '/category/all'} className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)] hover:scale-105">
+                          <span className="absolute inset-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
+                          <span className="relative">Shop Now</span>
+                          <ArrowRight size={16} className="relative group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
+
             {banners.length > 1 && (
               <>
-                <button onClick={prevBanner} className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 p-2 md:p-3 bg-black/50 text-white rounded-full hover:bg-[var(--accent)] transition-all">
-                  <ChevronLeft size={20} />
+                {/* Navigation Arrows */}
+                <button onClick={prevBanner} className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 group">
+                  <div className="relative p-4 md:p-5 bg-[var(--pearl)]/5 backdrop-blur-md border border-[var(--pearl)]/10 text-[var(--pearl)] rounded-full overflow-hidden transition-all duration-300 hover:border-[var(--sand)]/50 hover:scale-110">
+                    <span className="absolute inset-0 bg-gradient-to-r from-[var(--crimson)] to-[var(--sand)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <ChevronLeft size={20} className="relative" />
+                  </div>
                 </button>
-                <button onClick={nextBanner} className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-2 md:p-3 bg-black/50 text-white rounded-full hover:bg-[var(--accent)] transition-all">
-                  <ChevronRight size={20} />
+                <button onClick={nextBanner} className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 group">
+                  <div className="relative p-4 md:p-5 bg-[var(--pearl)]/5 backdrop-blur-md border border-[var(--pearl)]/10 text-[var(--pearl)] rounded-full overflow-hidden transition-all duration-300 hover:border-[var(--sand)]/50 hover:scale-110">
+                    <span className="absolute inset-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <ChevronRight size={20} className="relative" />
+                  </div>
                 </button>
-                <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+
+                {/* Progress Indicators */}
+                <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-3">
                   {banners.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentBanner(index)}
-                      className={`h-1.5 md:h-2 rounded-full transition-all ${index === currentBanner ? 'w-6 md:w-8 bg-[var(--accent)]' : 'w-1.5 md:w-2 bg-[var(--bg-secondary)]0'}`}
-                    />
+                      className="group relative h-12 flex items-center"
+                    >
+                      <div className={`relative h-1 rounded-full overflow-hidden transition-all duration-500 ${index === currentBanner ? 'w-16 bg-[var(--pearl)]/20' : 'w-8 bg-[var(--pearl)]/10 hover:bg-[var(--pearl)]/20'}`}>
+                        {index === currentBanner && (
+                          <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] rounded-full animate-[progress_5s_linear]" style={{ width: '100%' }} />
+                        )}
+                      </div>
+                      <span className={`absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold transition-all duration-300 ${index === currentBanner ? 'text-[var(--sand)] opacity-100' : 'text-[var(--pearl)]/40 opacity-0 group-hover:opacity-100'}`}>
+                        0{index + 1}
+                      </span>
+                    </button>
                   ))}
+                </div>
+
+                {/* Slide Counter */}
+                <div className="absolute bottom-8 md:bottom-12 right-4 md:right-8 hidden md:flex items-center gap-2 text-[var(--pearl)]/40 text-sm font-mono">
+                  <span className="text-2xl font-bold text-[var(--sand)]">0{currentBanner + 1}</span>
+                  <span className="text-lg">/</span>
+                  <span>0{banners.length}</span>
                 </div>
               </>
             )}
           </>
         )}
+
+        {/* Bottom Gradient Fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[var(--bg-primary)] to-transparent pointer-events-none" />
       </section>
 
-      {/* 2. DEALS & OFFERS */}
-      {dealsProducts.length > 0 && (
-        <section className="bg-gradient-to-r from-[var(--accent)]/20 to-[var(--bg-primary)] py-8 md:py-16">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="flex items-center justify-between mb-6 md:mb-8">
-              <div className="flex items-center gap-2 md:gap-3">
-                <Tag className="text-[var(--accent)]" size={20} />
-                <div>
-                  <h2 className="text-xl md:text-3xl font-black uppercase tracking-tight">Hot <span className="text-[var(--accent)]">Deals</span></h2>
-                  <p className="text-[var(--text-muted)] text-xs md:text-sm hidden sm:block">Limited time offers - Don't miss out!</p>
+      {/* 2. CATEGORIES SLIDER SECTION */}
+      {activeCategories.length > 0 && (
+        <CategorySlider categories={activeCategories} />
+      )}
+
+      {/* 3. OUR BRANDS SECTION - Always shows after categories */}
+      <section className="py-20 md:py-32 bg-[var(--bg-secondary)] relative overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[var(--sand)]/10 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '8s' }} />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[var(--crimson)]/8 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '6s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-[var(--sand)]/5 to-transparent rounded-full" />
+
+        {/* Floating Decorative Elements */}
+        <div className="absolute top-20 left-10 w-20 h-20 border border-[var(--sand)]/20 rounded-full animate-[float_6s_ease-in-out_infinite] hidden lg:block" />
+        <div className="absolute bottom-32 right-16 w-32 h-32 border border-[var(--crimson)]/15 rounded-full animate-[float_8s_ease-in-out_infinite_reverse] hidden lg:block" />
+        <div className="absolute top-1/3 right-1/4 w-4 h-4 bg-[var(--sand)]/40 rounded-full animate-[float_4s_ease-in-out_infinite] hidden lg:block" />
+
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
+          {/* Section Header - Premium Design */}
+          <div className="text-center mb-16 md:mb-24">
+            {/* Animated Badge */}
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-[var(--sand)]/20 to-[var(--crimson)]/20 backdrop-blur-sm border border-[var(--sand)]/30 rounded-full px-6 py-3 mb-8 animate-[fadeInUp_0.8s_ease-out]">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--sand)] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)]"></span>
+              </span>
+              <span className="text-[var(--sand)] text-[11px] font-bold uppercase tracking-[0.3em]">Exclusive Collection</span>
+            </div>
+
+            {/* Main Heading with Animation */}
+            <h2 className="text-4xl md:text-6xl lg:text-7xl font-extralight text-[var(--text-primary)] tracking-tight mb-6 animate-[fadeInUp_0.8s_ease-out_0.2s_both]">
+              Our <span className="font-black bg-gradient-to-r from-[var(--sand)] via-[var(--crimson)] to-[var(--sand)] bg-clip-text text-transparent bg-[length:200%_auto] animate-[shimmer_3s_linear_infinite]">Premium</span> Collection
+            </h2>
+
+            {/* Subtitle */}
+            <p className="text-[var(--text-muted)] text-base md:text-lg max-w-xl mx-auto leading-relaxed animate-[fadeInUp_0.8s_ease-out_0.4s_both]">
+              Handpicked products crafted with passion, designed for excellence
+            </p>
+
+            {/* Brand Logo/Badge - Show if own brand exists */}
+            {ownBrand && (
+              <div className="mt-10 inline-flex items-center gap-5 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl px-8 py-5 shadow-xl shadow-[var(--sand)]/10 hover:shadow-2xl hover:shadow-[var(--sand)]/20 transition-all duration-500 hover:-translate-y-1 animate-[fadeInUp_0.8s_ease-out_0.6s_both]">
+                {ownBrand.logo ? (
+                  <img src={ownBrand.logo} alt={ownBrand.name} className="w-14 h-14 rounded-xl object-cover ring-2 ring-[var(--sand)]/30" />
+                ) : (
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[var(--sand)] to-[var(--crimson)] flex items-center justify-center shadow-lg">
+                    <span className="text-white text-2xl font-black">{ownBrand.name?.charAt(0)}</span>
+                  </div>
+                )}
+                <div className="text-left">
+                  <p className="text-[var(--text-primary)] font-bold text-xl">{ownBrand.name}</p>
+                  <p className="text-[var(--text-muted)] text-sm">{ownBrandProducts.length} Premium Products</p>
                 </div>
               </div>
-              <Link href="/deals" className="text-[var(--accent)] text-[10px] md:text-xs font-black uppercase tracking-wider hover:text-white transition-colors">
-                View All →
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
-              {dealsProducts.map((product) => (
-                <ProductCard key={product.id} product={product} onQuickView={setQuickViewProduct} />
+            )}
+          </div>
+
+          {/* Products Grid - Premium Layout */}
+          {ownBrandProducts.length > 0 ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-8">
+              {ownBrandProducts.slice(0, 8).map((product, index) => (
+                <div key={product.id} className="animate-[fadeInUp_0.6s_ease-out_both]" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <ProductCard product={product} onQuickView={setQuickViewProduct} />
+                </div>
               ))}
             </div>
-          </div>
-        </section>
-      )}
-
-      {/* 3. FEATURED PRODUCTS */}
-      {featuredProducts.length > 0 && (
-        <section className="container mx-auto px-4 md:px-6 py-10 md:py-20">
-          <div className="flex items-center justify-between mb-6 md:mb-12">
-            <div className="flex items-center gap-2 md:gap-3">
-              <Sparkles className="text-yellow-500" size={20} />
-              <div>
-                <h2 className="text-xl md:text-3xl font-black uppercase tracking-tight">Featured <span className="text-yellow-500">Products</span></h2>
-                <p className="text-[var(--text-muted)] text-xs md:text-sm hidden sm:block">Handpicked by our team</p>
-              </div>
+          ) : products.length > 0 ? (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-8">
+              {products.filter(p => p.featured).slice(0, 8).map((product, index) => (
+                <div key={product.id} className="animate-[fadeInUp_0.6s_ease-out_both]" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <ProductCard product={product} onQuickView={setQuickViewProduct} />
+                </div>
+              ))}
             </div>
-            <Link href="/featured" className="text-yellow-500 text-[10px] md:text-xs font-black uppercase tracking-wider hover:text-white transition-colors">
-              View All →
+          ) : (
+            <div className="text-center py-20">
+              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[var(--sand)]/10 flex items-center justify-center">
+                <span className="text-3xl">🛍️</span>
+              </div>
+              <p className="text-[var(--text-muted)] text-lg">No products available yet</p>
+            </div>
+          )}
+
+          {/* View All Button */}
+          <div className="text-center mt-16">
+            <Link
+              href={ownBrand ? `/brand/${ownBrand.id}` : '/category/all'}
+              className="group inline-flex items-center gap-4"
+            >
+              <span className="relative overflow-hidden border-2 border-[var(--sand)] text-[var(--text-primary)] px-10 py-5 text-sm font-bold uppercase tracking-[0.2em] transition-all duration-500 hover:bg-[var(--sand)] hover:text-white hover:border-[var(--sand)]">
+                <span className="relative z-10 flex items-center gap-3">
+                  View All Products
+                  <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform duration-300" />
+                </span>
+              </span>
             </Link>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-            {featuredProducts.slice(0, 4).map((product) => (
-              <ProductCard key={product.id} product={product} onQuickView={setQuickViewProduct} />
-            ))}
-          </div>
-        </section>
-      )}
+        </div>
+      </section>
 
-      {/* 4. OUR EXCLUSIVES */}
-      {ownBrandProducts.length > 0 && (
-        <section className="container mx-auto px-4 md:px-6 py-10 md:py-20 border-y border-[var(--border-light)]">
-          <div className="flex items-center justify-between mb-6 md:mb-12">
-            <div className="flex items-center gap-2 md:gap-4">
-              <Award className="text-[var(--accent)]" size={24} />
-              <div>
-                <h2 className="text-xl md:text-3xl font-black uppercase tracking-tight">Our <span className="text-[var(--accent)]">Exclusives</span></h2>
-                <p className="text-[var(--text-muted)] text-xs md:text-sm hidden sm:block">Only at Avengers HQ</p>
-              </div>
-            </div>
-            <Link href="/category/exclusives" className="text-[var(--accent)] text-[10px] md:text-xs font-black uppercase tracking-wider hover:text-white transition-colors">
-              View All →
+      {/* 4. CTA BANNER - FULL WIDTH IMAGE ONLY */}
+      {bannerCTAs.length > 0 && (
+        <section className="w-full px-4 md:px-6 py-8">
+          {bannerCTAs.map((cta) => (
+            <Link key={cta.id} href={cta.buttonLink || '#'} className="block relative w-full rounded-2xl overflow-hidden border border-[var(--sand)]/30">
+              <img
+                src={cta.image}
+                alt={cta.title || 'Banner'}
+                className="w-full h-auto object-cover"
+                style={{ maxHeight: '500px', objectFit: 'cover', width: '100%' }}
+              />
             </Link>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-            {ownBrandProducts.map((product) => (
-              <ProductCard key={product.id} product={product} onQuickView={setQuickViewProduct} />
-            ))}
-          </div>
+          ))}
         </section>
       )}
 
-      {/* 5. SHOP BY PARTNER BRANDS */}
-      {brands.filter(b => b.type === 'THIRD_PARTY').length > 0 && (
-        <section className="container mx-auto px-4 md:px-6 py-10 md:py-20">
-          <div className="flex items-center gap-2 md:gap-4 mb-6 md:mb-12">
-            <Star className="text-[var(--text-muted)]" size={20} />
-            <h2 className="text-xl md:text-3xl font-black uppercase tracking-tight">Shop by <span className="text-[var(--text-muted)]">Partner Brands</span></h2>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
-            {brands.filter(b => b.type === 'THIRD_PARTY').map((brand: any) => (
+      {/* 5. NEW ARRIVALS - Romantic Minimal Design */}
+      {newArrivals.length > 0 && (
+        <section className="py-24 md:py-36 relative overflow-hidden bg-[var(--bg-secondary)]">
+          <div className="container mx-auto px-4 md:px-6 relative z-10">
+            {/* Section Header */}
+            <div className="text-center mb-16 md:mb-24">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-3 border border-[var(--sand)]/30 bg-[var(--sand)]/10 rounded-full px-6 py-3 mb-8">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--crimson)] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--crimson)]"></span>
+                </span>
+                <span className="text-[var(--sand)] text-[11px] font-bold uppercase tracking-[0.3em]">Just Arrived</span>
+              </div>
+
+              {/* Main Heading */}
+              <h2 className="text-4xl md:text-6xl lg:text-7xl font-thin text-[var(--text-primary)] tracking-tight mb-6">
+                New <span className="font-bold text-[var(--sand)]">Arrivals</span>
+              </h2>
+
+              {/* Subtitle */}
+              <p className="text-[var(--text-muted)] text-base md:text-lg max-w-md mx-auto">
+                Fresh additions crafted with precision and elegance
+              </p>
+            </div>
+
+            {/* Products Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+              {newArrivals.slice(0, 8).map((product) => (
+                <div key={product.id}>
+                  <ProductCard product={product} onQuickView={setQuickViewProduct} />
+                </div>
+              ))}
+            </div>
+
+            {/* View All Button */}
+            <div className="text-center mt-16">
               <Link
-                key={brand.id}
-                href={`/brand/${brand.id}`}
-                className="group bg-[var(--bg-card)] border border-[var(--border-color)] p-3 md:p-4 hover:border-[var(--accent)] hover:bg-[var(--bg-secondary)] transition-all duration-300 flex flex-col md:flex-row items-center gap-2 md:gap-4 rounded-xl"
+                href="/new-arrivals"
+                className="inline-flex items-center gap-3 border-2 border-[var(--sand)] text-[var(--text-primary)] px-8 py-4 text-sm font-bold uppercase tracking-wider transition-all duration-300 hover:bg-[var(--sand)] hover:text-white"
               >
-                <div className="w-14 h-14 md:w-20 md:h-20 flex-shrink-0 overflow-hidden rounded-lg md:rounded-xl bg-[var(--bg-secondary)]">
-                  {brand.logo ? (
-                    <img src={brand.logo} alt={brand.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <Star className="text-[var(--text-muted)] group-hover:text-white transition-colors" size={20} />
-                    </div>
-                  )}
-                </div>
-                <div className="text-center md:text-left">
-                  <p className="text-sm md:text-lg font-black uppercase tracking-wider text-[var(--text-secondary)] group-hover:text-white transition-colors">{brand.name}</p>
-                  <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)] block mt-0.5 md:mt-1">Official Partner</span>
-                  <span className="text-[10px] text-[var(--accent)] font-bold mt-1 md:mt-2 block group-hover:underline">Shop Now →</span>
-                </div>
+                View All New Arrivals
+                <ArrowRight size={18} />
               </Link>
-            ))}
+            </div>
           </div>
         </section>
       )}
 
-      {/* 6. NEW ARRIVALS */}
-      <section className="bg-[var(--bg-secondary)] py-10 md:py-20">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="flex items-center justify-between mb-6 md:mb-12">
-            <div className="flex items-center gap-2 md:gap-3">
-              <Flame className="text-orange-500" size={20} />
-              <div>
-                <h2 className="text-xl md:text-3xl font-black uppercase tracking-tight">New <span className="text-orange-500">Arrivals</span></h2>
-                <p className="text-[var(--text-muted)] text-xs md:text-sm hidden sm:block">Fresh from the multiverse</p>
-              </div>
-            </div>
-            <Link href="/new-arrivals" className="text-orange-500 text-[10px] md:text-xs font-black uppercase tracking-wider hover:text-white transition-colors">
-              View All →
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-            {newArrivals.slice(0, 4).map((product) => (
-              <ProductCard key={product.id} product={product} onQuickView={setQuickViewProduct} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. BEST SELLERS */}
-      <section className="container mx-auto px-4 md:px-6 py-10 md:py-20">
-        <div className="flex items-center justify-between mb-6 md:mb-12">
-          <div className="flex items-center gap-2 md:gap-3">
-            <TrendingUp className="text-green-500" size={20} />
-            <div>
-              <h2 className="text-xl md:text-3xl font-black uppercase tracking-tight">Best <span className="text-green-500">Sellers</span></h2>
-              <p className="text-[var(--text-muted)] text-xs md:text-sm hidden sm:block">Most loved by our heroes</p>
-            </div>
-          </div>
-          <Link href="/best-sellers" className="text-green-500 text-[10px] md:text-xs font-black uppercase tracking-wider hover:text-white transition-colors">
-            View All →
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-          {bestSellers.slice(0, 4).map((product, index) => (
-            <div key={product.id} className="relative">
-              <div className="absolute -top-1 -left-1 md:-top-3 md:-left-3 z-10 w-5 h-5 md:w-8 md:h-8 bg-green-500 rounded-full flex items-center justify-center text-black font-black text-[10px] md:text-sm">
-                #{index + 1}
-              </div>
-              <ProductCard product={product} onQuickView={setQuickViewProduct} />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 8. ALL PRODUCTS */}
-      <section className="container mx-auto px-4 md:px-6 py-10 md:py-20 border-t border-[var(--border-light)]">
-        <div className="flex items-center justify-between mb-6 md:mb-12">
-          <h2 className="text-2xl md:text-4xl font-black italic uppercase tracking-tighter">Avengers <span className="text-[var(--accent)]">HQ.</span></h2>
-          <div className="flex gap-2 md:gap-4">
-            <button className="h-9 w-9 md:h-12 md:w-12 border border-[var(--border-color)] flex items-center justify-center hover:bg-[var(--accent)] transition-all rounded-lg">
-              <ArrowLeft size={16} />
-            </button>
-            <button className="h-9 w-9 md:h-12 md:w-12 border border-[var(--border-color)] flex items-center justify-center hover:bg-[var(--accent)] transition-all rounded-lg">
-              <ArrowRight size={16} />
-            </button>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-          {products.slice(0, 8).map((product) => (
-            <ProductCard key={product.id} product={product} onQuickView={setQuickViewProduct} />
-          ))}
-        </div>
-        <div className="text-center mt-12">
-          <Link href="/category/all" className="inline-block border-2 border-[var(--accent)] text-[var(--accent)] px-12 py-4 font-black uppercase text-sm tracking-wider hover:bg-[var(--accent)] hover:text-white transition-all">
-            View All Products
-          </Link>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="bg-[var(--bg-primary)] border-t border-[var(--accent)]/30 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[var(--accent)] rounded-full blur-[200px] opacity-5" />
-
-        {/* Newsletter */}
-        <div className="border-b border-[var(--border-light)]">
-          <div className="container mx-auto px-6 py-16">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-              <div>
-                <h3 className="text-3xl font-black uppercase tracking-tight text-white mb-2">Join The <span className="text-[var(--accent)]">Avengers</span></h3>
-                <p className="text-[var(--text-muted)] text-sm">Get exclusive deals, new arrivals & superhero updates</p>
-              </div>
-              <div className="w-full lg:w-auto flex-1 max-w-xl">
-                <div className="bg-[var(--bg-primary)] border border-[var(--border-color)] p-1.5 flex rounded-lg focus-within:border-[var(--accent)] transition-all">
-                  <input type="email" placeholder="Enter your email" className="bg-transparent flex-1 px-4 outline-none text-white text-sm placeholder:text-[var(--text-muted)]" />
-                  <button className="bg-[var(--accent)] text-white px-8 py-3 text-xs font-black uppercase tracking-wider rounded-md hover:bg-white hover:text-[var(--accent)] transition-all">Subscribe</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer Content */}
-        <div className="container mx-auto px-6 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
-            <div className="lg:col-span-2">
-              <div className="text-3xl font-black text-white italic tracking-tighter uppercase mb-4">AVENGERS<span className="text-[var(--accent)]">HQ</span></div>
-              <p className="text-[var(--text-muted)] text-sm leading-relaxed mb-6 max-w-sm">Your ultimate destination for premium Marvel collectibles, action figures, and superhero merchandise.</p>
-              <div className="flex gap-3">
-                {['twitter', 'instagram', 'youtube', 'facebook'].map((social) => (
-                  <a key={social} href="#" className="w-10 h-10 bg-[var(--bg-secondary)] rounded-lg flex items-center justify-center text-[var(--text-muted)] hover:bg-[var(--accent)] hover:text-white transition-all">
-                    <span className="text-xs font-bold uppercase">{social[0]}</span>
-                  </a>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h4 className="text-white font-black uppercase tracking-wider text-sm mb-6">Quick Links</h4>
-              <ul className="space-y-3">
-                {['Home', 'Shop All', 'Action Figures', 'Collectibles', 'Role Play'].map((link) => (
-                  <li key={link}><Link href="#" className="text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors text-sm">{link}</Link></li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-black uppercase tracking-wider text-sm mb-6">Help</h4>
-              <ul className="space-y-3">
-                {['Contact Us', 'FAQs', 'Shipping', 'Returns', 'Track Order'].map((link) => (
-                  <li key={link}><Link href="#" className="text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors text-sm">{link}</Link></li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-black uppercase tracking-wider text-sm mb-6">Contact</h4>
-              <ul className="space-y-3 text-[var(--text-muted)] text-sm">
-                <li>Stark Tower, New York</li>
-                <li>hello@avengershq.com</li>
-                <li>+1 (800) AVENGER</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="border-t border-[var(--border-light)]">
-          <div className="container mx-auto px-6 py-6">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <p className="text-[var(--text-muted)] text-xs">© 2026 Avengers HQ. All rights reserved.</p>
-              <div className="flex items-center gap-6">
-                {['Privacy', 'Terms', 'Cookies'].map((link) => (
-                  <Link key={link} href="#" className="text-[var(--text-muted)] hover:text-white text-xs transition-colors">{link}</Link>
-                ))}
-              </div>
-              <div className="flex items-center gap-2">
-                {['VISA', 'MC', 'UPI', 'COD'].map((method) => (
-                  <div key={method} className="bg-[var(--bg-secondary)] rounded px-2 py-1">
-                    <span className="text-[10px] font-bold text-[var(--text-muted)]">{method}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      {/* 6. SHOP BY BRANDS - SLIDER */}
+      {allBrands.length > 0 && (
+        <BrandSlider brands={allBrands} products={products} />
+      )}
 
       {/* Quick View Modal */}
       {quickViewProduct && (

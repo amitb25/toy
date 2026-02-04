@@ -2,6 +2,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+## Login Details
+- Admin: admin@toykart.com / admin123
+- User: user@example.com / user123
+
 First, run the development server:
 
 ```bash

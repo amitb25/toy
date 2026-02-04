@@ -15,7 +15,6 @@ const sampleBrands = [
 export async function GET() {
   try {
     const brands = await prisma.brand.findMany({
-      where: { status: true },
       include: { _count: { select: { products: true } } }
     })
 

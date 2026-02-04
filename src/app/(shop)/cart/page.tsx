@@ -10,11 +10,14 @@ export default function CartPage() {
   const items = useCartStore((state: any) => state.items)
   const removeItem = useCartStore((state: any) => state.removeItem)
   const clearCart = useCartStore((state: any) => state.clearCart)
+  const incrementQuantity = useCartStore((state: any) => state.incrementQuantity)
+  const decrementQuantity = useCartStore((state: any) => state.decrementQuantity)
 
   useEffect(() => { setMounted(true) }, [])
 
   if (!mounted) return null
 
+  const totalItems = items.reduce((acc: number, item: any) => acc + (item.quantity || 1), 0)
   const subtotal = items.reduce((acc: number, item: any) => acc + ((item.price - (item.discount || 0)) * (item.quantity || 1)), 0)
   const shipping = subtotal > 1999 ? 0 : 99
   const total = subtotal + shipping
@@ -50,7 +53,7 @@ export default function CartPage() {
               <h1 className="text-2xl md:text-4xl font-black text-[var(--text-primary)] uppercase tracking-tight flex items-center gap-3">
                 <ShoppingBag className="text-[var(--accent)]" size={28} /> Your Cart
               </h1>
-              <p className="text-[var(--text-muted)] text-sm mt-1">{items.length} {items.length === 1 ? 'item' : 'items'}</p>
+              <p className="text-[var(--text-muted)] text-sm mt-1">{totalItems} {totalItems === 1 ? 'item' : 'items'}</p>
             </div>
             <button onClick={clearCart} className="text-xs font-bold text-[var(--text-muted)] hover:text-[var(--accent)] uppercase tracking-wider transition-colors">
               Clear Cart
@@ -61,12 +64,12 @@ export default function CartPage() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Cart Items */}
           <div className="flex-1 space-y-4">
-            {items.map((item: any, index: number) => {
+            {items.map((item: any) => {
               const images = item.images ? JSON.parse(item.images) : []
               const finalPrice = item.price - (item.discount || 0)
 
               return (
-                <div key={item.id + index} className="bg-[var(--bg-card)] border border-[var(--border-light)] rounded-xl p-4 md:p-6">
+                <div key={item.id} className="bg-[var(--bg-card)] border border-[var(--border-light)] rounded-xl p-4 md:p-6">
                   <div className="flex gap-4">
                     {/* Image */}
                     <div className="w-20 h-20 md:w-28 md:h-28 flex-shrink-0 bg-[var(--bg-primary)] rounded-lg overflow-hidden">
@@ -93,11 +96,17 @@ export default function CartPage() {
                       {/* Actions */}
                       <div className="flex items-center gap-4 mt-4">
                         <div className="flex items-center bg-[var(--bg-primary)] rounded-lg border border-[var(--border-color)]">
-                          <button className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+                          <button
+                            onClick={() => decrementQuantity(item.id)}
+                            className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+                          >
                             <Minus size={14} />
                           </button>
                           <span className="px-3 text-[var(--text-primary)] font-bold text-sm">{item.quantity || 1}</span>
-                          <button className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+                          <button
+                            onClick={() => incrementQuantity(item.id)}
+                            className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+                          >
                             <Plus size={14} />
                           </button>
                         </div>

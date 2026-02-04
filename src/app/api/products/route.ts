@@ -142,3 +142,36 @@ export async function GET() {
     return NextResponse.json(sampleProducts)
   }
 }
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json()
+    console.log("Creating product with data:", JSON.stringify(body))
+
+    const product = await prisma.product.create({
+      data: {
+        name: body.name,
+        description: body.description,
+        price: parseFloat(body.price),
+        discount: parseFloat(body.discount) || 0,
+        stock: parseInt(body.stock) || 0,
+        images: body.images || '[]',
+        ageGroup: body.ageGroup || 'All',
+        safetyInfo: body.safetyInfo || null,
+        status: body.status ?? true,
+        featured: body.featured ?? false,
+        categoryId: body.categoryId,
+        brandId: body.brandId
+      },
+      include: {
+        brand: true,
+        category: true
+      }
+    })
+    return NextResponse.json(product)
+  } catch (error: unknown) {
+    const err = error as Error
+    console.error("Create Product Error:", err.message, err.stack)
+    return NextResponse.json({ error: "Failed to create product", details: err.message }, { status: 500 })
+  }
+}

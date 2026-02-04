@@ -26,19 +26,23 @@ const sampleBanners = [
   }
 ]
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url)
+    const showAll = searchParams.get('all') === 'true'
+
     const banners = await prisma.banner.findMany({
-      where: { active: true },
+      where: showAll ? {} : { active: true },
       orderBy: { order: 'asc' }
     })
 
-    if (banners.length === 0) {
+    if (banners.length === 0 && !showAll) {
       return NextResponse.json(sampleBanners)
     }
 
     return NextResponse.json(banners)
   } catch (error) {
+    console.error("Banners fetch error:", error)
     return NextResponse.json(sampleBanners)
   }
 }
