@@ -10,6 +10,7 @@ import toast from 'react-hot-toast'
 interface Product {
   id: string
   name: string
+  slug?: string
   description: string
   price: number
   discount: number
@@ -166,7 +167,7 @@ export default function ProductCard({ product, onQuickView, variant = 'default' 
       </div>
 
       {/* Image Container */}
-      <Link href={`/product/${product.id}`}>
+      <Link href={`/product/${product.slug || product.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`}>
         <div className="relative aspect-square overflow-hidden bg-[var(--bg-secondary)] cursor-pointer">
           {/* Shimmer Loading */}
           {!imageLoaded && (
@@ -186,20 +187,20 @@ export default function ProductCard({ product, onQuickView, variant = 'default' 
       {/* Content */}
       <div className="p-3 md:p-4 space-y-2">
         {/* Brand */}
-        <div className="flex items-center justify-between">
-          <p className="text-[10px] font-bold uppercase text-[var(--price-color)] tracking-wider">
+        <div className="flex items-center justify-between gap-1">
+          <p className="text-[9px] md:text-[10px] font-bold uppercase text-[var(--price-color)] tracking-wider truncate">
             {product.brand?.name || 'Avengers HQ'}
           </p>
           {product.category && (
-            <span className="text-[9px] font-medium text-[var(--text-muted)] bg-[var(--bg-secondary)] px-2 py-0.5 rounded-full">
+            <span className="text-[8px] md:text-[9px] font-medium text-[var(--text-muted)] bg-[var(--bg-secondary)] px-1.5 md:px-2 py-0.5 rounded-full whitespace-nowrap">
               {product.category.name}
             </span>
           )}
         </div>
 
         {/* Product Name */}
-        <Link href={`/product/${product.id}`}>
-          <h4 className="text-sm font-semibold text-[var(--text-primary)] line-clamp-2 hover:text-[var(--sand)] transition-colors cursor-pointer leading-snug min-h-[2.5rem]">
+        <Link href={`/product/${product.slug || product.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`}>
+          <h4 className="text-xs md:text-sm font-semibold text-[var(--text-primary)] line-clamp-2 hover:text-[var(--sand)] transition-colors cursor-pointer leading-snug min-h-[2rem] md:min-h-[2.5rem]">
             {product.name}
           </h4>
         </Link>

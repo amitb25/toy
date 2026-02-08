@@ -19,10 +19,18 @@ export async function GET() {
     })
 
     if (brands.length === 0) {
-      return NextResponse.json(sampleBrands)
+      const withSlugs = sampleBrands.map(b => ({
+        ...b,
+        slug: b.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+      }))
+      return NextResponse.json(withSlugs)
     }
 
-    return NextResponse.json(brands)
+    const withSlugs = brands.map(b => ({
+      ...b,
+      slug: b.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    }))
+    return NextResponse.json(withSlugs)
   } catch (error) {
     return NextResponse.json(sampleBrands)
   }

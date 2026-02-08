@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Package, Star, Award, Filter, ChevronDown } from 'lucide-react'
+import Loader from '@/components/Loader'
 import ProductCard from '@/components/ProductCard'
 import QuickView from '@/components/QuickView'
 
 interface Brand {
   id: string
   name: string
+  slug?: string
   logo: string | null
   type: 'OWN' | 'THIRD_PARTY'
   status: boolean
@@ -51,8 +53,9 @@ export default function BrandPage() {
         const brandsData = await brandsRes.json()
 
         // Find brand by ID or by slug (name)
+        const toSlug = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
         const foundBrand = Array.isArray(brandsData)
-          ? brandsData.find((b: Brand) => b.id === slug || b.name.toLowerCase().replace(/\s+/g, '-') === slug.toLowerCase())
+          ? brandsData.find((b: any) => b.slug === slug || toSlug(b.name) === slug || b.id === slug)
           : null
         setBrand(foundBrand)
 
@@ -96,16 +99,7 @@ export default function BrandPage() {
     }
   })
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-16 h-16 border-4 border-[var(--sand)]/30 border-t-[var(--sand)] rounded-full animate-spin" />
-          <p className="text-[var(--text-muted)] text-sm">Loading brand...</p>
-        </div>
-      </div>
-    )
-  }
+  if (loading) return <Loader text="Loading brand..." />
 
   if (!brand) {
     return (
@@ -131,17 +125,8 @@ export default function BrandPage() {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[var(--obsidian)] via-[var(--obsidian)] to-[var(--crimson)]/30">
-        {/* Background Effects */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[var(--sand)]/10 rounded-full blur-[150px]" />
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[var(--crimson)]/15 rounded-full blur-[120px]" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[var(--sand)]/5 rounded-full blur-[100px]" />
-        </div>
+      <section className="relative overflow-hidden bg-[var(--brand-banner-bg)]">
 
-        {/* Decorative Elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 border border-[var(--sand)]/20 rounded-full animate-[float_6s_ease-in-out_infinite] hidden lg:block" />
-        <div className="absolute bottom-20 right-20 w-32 h-32 border border-[var(--crimson)]/15 rounded-full animate-[float_8s_ease-in-out_infinite_reverse] hidden lg:block" />
 
         <div className="container mx-auto px-4 md:px-6 py-16 md:py-24 relative z-10">
           {/* Back Link */}
@@ -219,12 +204,10 @@ export default function BrandPage() {
           </div>
         </div>
 
-        {/* Bottom Gradient */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[var(--bg-primary)] to-transparent" />
       </section>
 
       {/* Products Section */}
-      <section className="py-12 md:py-20">
+      <section className="py-8 md:py-14">
         <div className="container mx-auto px-4 md:px-6">
           {/* Toolbar */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10">

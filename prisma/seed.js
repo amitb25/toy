@@ -33,7 +33,7 @@ async function main() {
         title: 'Avengers Endgame Collection',
         subtitle: 'Limited Edition 2026 Series - Shop Now',
         image: 'https://images.unsplash.com/photo-1569003339405-ea396a5a8a90?q=80&w=2000',
-        link: '/category/all',
+        link: '/products',
         order: 1,
         active: true
       },

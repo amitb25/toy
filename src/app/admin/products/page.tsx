@@ -63,7 +63,7 @@ export default function ProductsAdmin() {
   const fetchAll = async () => {
     try {
       const [productsRes, categoriesRes, brandsRes] = await Promise.all([
-        fetch('/api/products'),
+        fetch('/api/products?all=true'),
         fetch('/api/categories'),
         fetch('/api/brands')
       ])

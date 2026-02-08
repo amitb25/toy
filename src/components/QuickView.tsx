@@ -4,6 +4,7 @@ import { X, Heart, ShoppingBag, Star, Minus, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useCartStore } from '@/lib/store/useCartStore'
 import { useWishlistStore } from '@/lib/store/useWishlistStore'
+import toast from 'react-hot-toast'
 
 interface Product {
   id: string
@@ -36,6 +37,35 @@ export default function QuickView({ product, onClose }: QuickViewProps) {
     for (let i = 0; i < quantity; i++) {
       addItem(product)
     }
+    toast.success(
+      (t) => (
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl overflow-hidden bg-[var(--bg-secondary)] flex-shrink-0 border border-[var(--sand)]/30">
+            <img
+              src={images[0] || 'https://images.unsplash.com/photo-1608889175123-8ee362201f81?q=80&w=100'}
+              alt={product.name}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div>
+            <p className="font-bold text-[var(--text-primary)]">Added to Cart!</p>
+            <p className="text-xs text-[var(--text-muted)] line-clamp-1">{product.name}</p>
+          </div>
+        </div>
+      ),
+      {
+        duration: 3000,
+        position: 'bottom-right',
+        style: {
+          background: 'var(--bg-card)',
+          color: 'var(--text-primary)',
+          padding: '16px 20px',
+          borderRadius: '16px',
+          border: '2px solid var(--sand)',
+          boxShadow: '0 20px 50px rgba(0,0,0,0.15)',
+        },
+      }
+    )
     onClose()
   }
 

@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Award, ArrowRight } from 'lucide-react'
+import Loader from '@/components/Loader'
 
 interface Brand {
   id: string
   name: string
+  slug?: string
   logo: string | null
   type: 'OWN' | 'THIRD_PARTY'
   status: boolean
@@ -46,38 +48,29 @@ export default function BrandsPage() {
     return products.filter(p => p.brandId === brandId).length
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-3 border-[var(--sand)]/20 border-t-[var(--sand)] rounded-full animate-spin" />
-          <p className="text-[var(--text-muted)] text-sm">Loading brands...</p>
-        </div>
-      </div>
-    )
-  }
+  if (loading) return <Loader text="Loading brands..." />
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
-      {/* Hero Section */}
-      <section className="relative bg-[var(--bg-secondary)] py-10 md:py-24 border-b border-[var(--border-light)]">
+      {/* Hero Section - Dark banner */}
+      <section className="relative overflow-hidden bg-[var(--brand-banner-bg)] py-10 md:py-24">
         <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <Link href="/" className="inline-flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--sand)] transition-colors mb-6 md:mb-8 group">
+          <Link href="/" className="inline-flex items-center gap-2 text-[var(--pearl)]/60 hover:text-[var(--sand)] transition-colors mb-6 md:mb-8 group">
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             <span className="text-xs md:text-sm font-medium">Back to Home</span>
           </Link>
 
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 md:gap-3 border border-[var(--sand)]/30 bg-[var(--sand)]/10 rounded-full px-4 md:px-6 py-2 md:py-3 mb-6 md:mb-8">
+            <div className="inline-flex items-center gap-2 md:gap-3 border border-[var(--sand)]/30 bg-[var(--sand)]/20 rounded-full px-4 md:px-6 py-2 md:py-3 mb-6 md:mb-8">
               <Award size={14} className="text-[var(--sand)]" />
               <span className="text-[var(--sand)] text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em]">Premium Partners</span>
             </div>
 
-            <h1 className="text-3xl md:text-6xl lg:text-7xl font-thin text-[var(--text-primary)] tracking-tight mb-4 md:mb-6">
+            <h1 className="text-3xl md:text-6xl lg:text-7xl font-thin text-[var(--pearl)] tracking-tight mb-4 md:mb-6">
               Our <span className="font-bold text-[var(--sand)]">Brands</span>
             </h1>
 
-            <p className="text-[var(--text-muted)] text-sm md:text-lg max-w-xl mx-auto">
+            <p className="text-[var(--pearl)]/60 text-sm md:text-lg max-w-xl mx-auto">
               Discover premium products from our exclusive brand partners
             </p>
           </div>
@@ -94,7 +87,7 @@ export default function BrandsPage() {
                 return (
                   <Link
                     key={brand.id}
-                    href={`/brand/${brand.id}`}
+                    href={`/brand/${brand.slug || brand.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`}
                     className="group relative overflow-hidden rounded-2xl bg-[var(--bg-card)] border border-[var(--border-light)] hover:border-[var(--sand)]/50 transition-all duration-300 p-6 md:p-8"
                   >
                     {/* Type Badge */}

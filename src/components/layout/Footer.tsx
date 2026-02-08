@@ -48,7 +48,7 @@ export default function Footer() {
             <h4 className="text-[var(--sand)] font-bold uppercase tracking-wider text-xs md:text-sm mb-4 md:mb-6">Quick Links</h4>
             <ul className="space-y-2 md:space-y-3">
               <li><Link href="/" className="text-[var(--pearl)]/60 hover:text-[var(--sand)] transition-colors text-xs md:text-sm">Home</Link></li>
-              <li><Link href="/category/all" className="text-[var(--pearl)]/60 hover:text-[var(--sand)] transition-colors text-xs md:text-sm">Shop All</Link></li>
+              <li><Link href="/products" className="text-[var(--pearl)]/60 hover:text-[var(--sand)] transition-colors text-xs md:text-sm">Shop All</Link></li>
               <li><Link href="/categories" className="text-[var(--pearl)]/60 hover:text-[var(--sand)] transition-colors text-xs md:text-sm">Categories</Link></li>
               <li><Link href="/brands" className="text-[var(--pearl)]/60 hover:text-[var(--sand)] transition-colors text-xs md:text-sm">Brands</Link></li>
               <li><Link href="/new-arrivals" className="text-[var(--pearl)]/60 hover:text-[var(--sand)] transition-colors text-xs md:text-sm">New Arrivals</Link></li>

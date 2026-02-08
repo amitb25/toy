@@ -121,9 +121,13 @@ const sampleProducts = [
   }
 ]
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url)
+    const all = searchParams.get('all')
+
     const products = await prisma.product.findMany({
+      where: all === 'true' ? {} : { status: true },
       include: {
         brand: true,
         category: true
@@ -132,10 +136,18 @@ export async function GET() {
 
     // Return sample data if database is empty
     if (products.length === 0) {
-      return NextResponse.json(sampleProducts)
+      const withSlugs = sampleProducts.map(p => ({
+        ...p,
+        slug: p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+      }))
+      return NextResponse.json(withSlugs)
     }
 
-    return NextResponse.json(products)
+    const withSlugs = products.map(p => ({
+      ...p,
+      slug: p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+    }))
+    return NextResponse.json(withSlugs)
   } catch (error) {
     console.error("Prisma Error:", error)
     // Return sample data on error

@@ -59,7 +59,7 @@ export default function Home() {
     <div className="bg-[var(--bg-primary)] min-h-screen text-[var(--text-primary)]">
 
       {/* 1. HERO BANNER SLIDER */}
-      <section className="relative h-[350px] md:h-[550px] lg:h-[700px] w-full overflow-hidden bg-[var(--obsidian)]">
+      <section className="relative h-[350px] md:h-[650px] lg:h-[85vh] w-full overflow-hidden bg-[var(--obsidian)]">
         {/* Animated Background Pattern */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,var(--crimson)_0%,transparent_50%)] animate-pulse" style={{ animationDuration: '4s' }} />
@@ -93,12 +93,12 @@ export default function Home() {
                     Curated selection of premium products for the discerning collector
                   </p>
                   <div className="flex flex-wrap gap-4 animate-[fadeInUp_0.8s_ease-out_0.6s_both]">
-                    <Link href="/category/all" className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)] hover:scale-105">
+                    <Link href="/products" className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)] hover:scale-105">
                       <span className="absolute inset-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
                       <span className="relative">Shop Now</span>
                       <ArrowRight size={16} className="relative group-hover:translate-x-1 transition-transform" />
                     </Link>
-                    <Link href="/category/all" className="inline-flex items-center gap-3 border-2 border-[var(--pearl)]/30 text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-semibold uppercase text-xs md:text-sm tracking-wider hover:border-[var(--sand)] hover:text-[var(--sand)] transition-all duration-300 backdrop-blur-sm">
+                    <Link href="/products" className="inline-flex items-center gap-3 border-2 border-[var(--pearl)]/30 text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-semibold uppercase text-xs md:text-sm tracking-wider hover:border-[var(--sand)] hover:text-[var(--sand)] transition-all duration-300 backdrop-blur-sm">
                       Explore More
                     </Link>
                   </div>
@@ -118,36 +118,36 @@ export default function Home() {
                   className={`w-full h-full object-cover transition-transform duration-[8000ms] ease-out ${index === currentBanner ? 'scale-110' : 'scale-100'}`}
                   alt={banner.title}
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-[var(--obsidian)] via-[var(--obsidian)]/60 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--obsidian)]/60 via-transparent to-[var(--obsidian)]/20" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[var(--obsidian)]/90 via-[var(--obsidian)]/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--obsidian)]/50 via-transparent to-transparent" />
 
                 {/* Decorative Elements */}
                 <div className="absolute top-1/4 right-10 w-32 h-32 border border-[var(--sand)]/20 rounded-full animate-[spin_20s_linear_infinite] hidden lg:block" />
                 <div className="absolute bottom-1/4 right-20 w-20 h-20 border border-[var(--crimson)]/20 rounded-full animate-[spin_15s_linear_infinite_reverse] hidden lg:block" />
 
-                <div className="absolute inset-0 flex items-center">
+                <div className="absolute inset-0 flex items-end md:items-center pb-16 md:pb-0">
                   <div className="container mx-auto px-4 md:px-6">
                     <div className={`max-w-3xl transition-all duration-700 ${index === currentBanner ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-                      <div className="inline-flex items-center gap-3 bg-[var(--sand)]/10 backdrop-blur-md border border-[var(--sand)]/30 rounded-full px-5 py-2.5 mb-6">
-                        <span className="relative flex h-2 w-2">
+                      <div className="inline-flex items-center gap-2 md:gap-3 bg-[var(--sand)]/10 backdrop-blur-md border border-[var(--sand)]/30 rounded-full px-3 py-1.5 md:px-5 md:py-2.5 mb-3 md:mb-6">
+                        <span className="relative flex h-1.5 w-1.5 md:h-2 md:w-2">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--sand)] opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--sand)]"></span>
+                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 md:h-2 md:w-2 bg-[var(--sand)]"></span>
                         </span>
-                        <span className="text-[var(--sand)] text-xs font-bold uppercase tracking-[0.3em]">Featured</span>
+                        <span className="text-[var(--sand)] text-[8px] md:text-xs font-bold uppercase tracking-[0.2em] md:tracking-[0.3em]">Featured</span>
                       </div>
-                      <h1 className="text-4xl md:text-6xl lg:text-8xl font-extralight text-[var(--pearl)] tracking-tight mb-4 md:mb-6 leading-[1.1]">
+                      <h1 className="text-2xl md:text-6xl lg:text-8xl font-extralight text-[var(--pearl)] tracking-tight mb-2 md:mb-6 leading-[1.1]">
                         {banner.title?.split(' ').map((word: string, i: number) => (
                           <span key={i} className={i === 1 ? 'font-black bg-gradient-to-r from-[var(--sand)] via-[var(--crimson)] to-[var(--sand)] bg-clip-text text-transparent bg-[length:200%_auto] animate-[shimmer_3s_linear_infinite]' : ''}>
                             {word}{' '}
                           </span>
                         ))}
                       </h1>
-                      <p className="text-[var(--pearl)]/60 text-base md:text-xl mb-8 md:mb-10 max-w-xl leading-relaxed">{banner.subtitle}</p>
+                      <p className="text-[var(--pearl)]/60 text-xs md:text-xl mb-4 md:mb-10 max-w-xl leading-relaxed">{banner.subtitle}</p>
                       <div className="flex flex-wrap gap-4">
-                        <Link href={banner.link || '/category/all'} className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)] hover:scale-105">
+                        <Link href={banner.link || '/products'} className="group relative inline-flex items-center gap-2 md:gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-5 py-2.5 md:px-10 md:py-5 font-bold uppercase text-[10px] md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)] hover:scale-105">
                           <span className="absolute inset-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
                           <span className="relative">Shop Now</span>
-                          <ArrowRight size={16} className="relative group-hover:translate-x-1 transition-transform" />
+                          <ArrowRight size={14} className="relative group-hover:translate-x-1 transition-transform" />
                         </Link>
                       </div>
                     </div>
@@ -159,21 +159,29 @@ export default function Home() {
             {banners.length > 1 && (
               <>
                 {/* Navigation Arrows */}
-                <button onClick={prevBanner} className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 group">
-                  <div className="relative p-4 md:p-5 bg-[var(--pearl)]/5 backdrop-blur-md border border-[var(--pearl)]/10 text-[var(--pearl)] rounded-full overflow-hidden transition-all duration-300 hover:border-[var(--sand)]/50 hover:scale-110">
+                {/* Desktop: center arrows */}
+                <button onClick={prevBanner} className="absolute left-8 top-1/2 -translate-y-1/2 group hidden md:block">
+                  <div className="relative p-5 bg-[var(--pearl)]/5 backdrop-blur-md border border-[var(--pearl)]/10 text-[var(--pearl)] rounded-full overflow-hidden transition-all duration-300 hover:border-[var(--sand)]/50 hover:scale-110">
                     <span className="absolute inset-0 bg-gradient-to-r from-[var(--crimson)] to-[var(--sand)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <ChevronLeft size={20} className="relative" />
                   </div>
                 </button>
-                <button onClick={nextBanner} className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 group">
-                  <div className="relative p-4 md:p-5 bg-[var(--pearl)]/5 backdrop-blur-md border border-[var(--pearl)]/10 text-[var(--pearl)] rounded-full overflow-hidden transition-all duration-300 hover:border-[var(--sand)]/50 hover:scale-110">
+                <button onClick={nextBanner} className="absolute right-8 top-1/2 -translate-y-1/2 group hidden md:block">
+                  <div className="relative p-5 bg-[var(--pearl)]/5 backdrop-blur-md border border-[var(--pearl)]/10 text-[var(--pearl)] rounded-full overflow-hidden transition-all duration-300 hover:border-[var(--sand)]/50 hover:scale-110">
                     <span className="absolute inset-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <ChevronRight size={20} className="relative" />
                   </div>
                 </button>
+                {/* Mobile: bottom corner arrows */}
+                <button onClick={prevBanner} className="absolute left-3 bottom-3 p-2.5 bg-[var(--pearl)]/10 backdrop-blur-md border border-[var(--pearl)]/20 text-[var(--pearl)] rounded-full md:hidden">
+                  <ChevronLeft size={16} />
+                </button>
+                <button onClick={nextBanner} className="absolute right-3 bottom-3 p-2.5 bg-[var(--pearl)]/10 backdrop-blur-md border border-[var(--pearl)]/20 text-[var(--pearl)] rounded-full md:hidden">
+                  <ChevronRight size={16} />
+                </button>
 
                 {/* Progress Indicators */}
-                <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-3">
+                <div className="absolute bottom-2 md:bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-3">
                   {banners.map((_, index) => (
                     <button
                       key={index}
@@ -203,8 +211,6 @@ export default function Home() {
           </>
         )}
 
-        {/* Bottom Gradient Fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[var(--bg-primary)] to-transparent pointer-events-none" />
       </section>
 
       {/* 2. CATEGORIES SLIDER SECTION */}
@@ -213,7 +219,7 @@ export default function Home() {
       )}
 
       {/* 3. OUR BRANDS SECTION - Always shows after categories */}
-      <section className="py-20 md:py-32 bg-[var(--bg-secondary)] relative overflow-hidden">
+      <section className="py-20 md:py-32 bg-[var(--bg-primary)] relative overflow-hidden">
         {/* Animated Background Elements */}
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[var(--sand)]/10 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '8s' }} />
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[var(--crimson)]/8 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '6s' }} />
@@ -293,7 +299,7 @@ export default function Home() {
           {/* View All Button */}
           <div className="text-center mt-16">
             <Link
-              href={ownBrand ? `/brand/${ownBrand.id}` : '/category/all'}
+              href={ownBrand ? `/brand/${ownBrand.slug || ownBrand.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}` : '/products'}
               className="group inline-flex items-center gap-4"
             >
               <span className="relative overflow-hidden border-2 border-[var(--sand)] text-[var(--text-primary)] px-10 py-5 text-sm font-bold uppercase tracking-[0.2em] transition-all duration-500 hover:bg-[var(--sand)] hover:text-white hover:border-[var(--sand)]">

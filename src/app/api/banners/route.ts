@@ -11,7 +11,7 @@ const sampleBanners = [
     title: 'Avengers Collection',
     subtitle: 'Premium Marvel collectibles & action figures',
     image: 'https://images.unsplash.com/photo-1569003339405-ea396a5a8a90?q=80&w=2000',
-    link: '/category/all',
+    link: '/products',
     active: true,
     order: 1
   },

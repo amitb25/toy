@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, Award, Star } from 'lucide-react'
 interface Brand {
   id: string
   name: string
+  slug?: string
   logo: string | null
   type: 'OWN' | 'THIRD_PARTY'
   status: boolean
@@ -72,7 +73,7 @@ export default function BrandSlider({ brands, products }: BrandSliderProps) {
   }
 
   return (
-    <section className="py-20 md:py-28 bg-gradient-to-b from-[var(--bg-secondary)] via-[var(--bg-primary)] to-[var(--bg-secondary)] relative overflow-hidden">
+    <section className="py-20 md:py-28 bg-[var(--bg-primary)] relative overflow-hidden">
       {/* Background Decorative Elements */}
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[var(--sand)]/5 rounded-full blur-[150px]" />
       <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-[var(--crimson)]/5 rounded-full blur-[120px]" />
@@ -137,11 +138,11 @@ export default function BrandSlider({ brands, products }: BrandSliderProps) {
               return (
                 <Link
                   key={brand.id}
-                  href={`/brand/${brand.id}`}
+                  href={`/brand/${brand.slug || brand.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`}
                   className="flex-shrink-0 w-[200px] md:w-[240px] lg:w-[260px]"
                 >
                   {/* Card */}
-                  <div className="relative bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-[var(--sand)]/50 rounded-3xl p-6 md:p-8 overflow-hidden shadow-lg transition-colors duration-300">
+                  <div className="relative bg-[var(--bg-card)] border border-[var(--sand)] hover:border-[var(--sand)] rounded-3xl p-6 md:p-8 overflow-hidden shadow-lg transition-colors duration-300">
                     {/* Type Badge */}
                     <div className={`absolute top-4 right-4 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider ${
                       brand.type === 'OWN'

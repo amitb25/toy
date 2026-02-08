@@ -32,9 +32,9 @@
   --crimson-hover: #8a001a;
   --crimson-light: rgba(113, 0, 20, 0.1);
 
-  /* Add to Cart button: Soft Pearl */
-  --btn-cart-bg: #F2F1ED;
-  --btn-cart-text: #161616;
+  /* Add to Cart button: Black */
+  --btn-cart-bg: #161616;
+  --btn-cart-text: #F2F1ED;
   --btn-cart-hover-bg: #B38F6F;
   --btn-cart-hover-text: #ffffff;
 
@@ -44,6 +44,13 @@
   --obsidian: #161616;
 
   --price-color: #161616;
+
+  --nav-bg: #ffffff;
+  --brand-banner-bg: #161616;
+
+  /* Topbar: black in light mode */
+  --topbar-bg: #161616;
+  --topbar-text: #F2F1ED;
 
   --success: #22c55e;
   --warning: #eab308;
@@ -87,6 +94,13 @@
 
   --price-color: #B38F6F;
 
+  --nav-bg: #1e1e1e;
+  --brand-banner-bg: #252525;
+
+  /* Topbar: white in dark mode */
+  --topbar-bg: #F2F1ED;
+  --topbar-text: #161616;
+
   --success: #22c55e;
   --warning: #eab308;
   --error: #ef4444;
@@ -116,6 +130,11 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading), sans-serif;
+  letter-spacing: 3px;
 }
 
 /* Smooth theme transitions */
@@ -310,3 +329,61 @@ body {
 .stagger-animation > *:nth-child(6) { animation-delay: 0.5s; }
 .stagger-animation > *:nth-child(7) { animation-delay: 0.6s; }
 .stagger-animation > *:nth-child(8) { animation-delay: 0.7s; }
+
+/* Uiverse Loader - by Nawsome */
+.svg-loader {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  transform-style: preserve-3d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.svg-loader svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  transition: .5s;
+  z-index: calc(1 - (0.2 * var(--j)));
+  transform-origin: center;
+  width: 172px;
+  height: 172px;
+  fill: none;
+}
+
+.svg-loader svg #center {
+  transition: .5s;
+  transform-origin: center;
+}
+
+#out2 {
+  animation: loaderRotate 7s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+#out3 {
+  animation: loaderRotate 3s ease-in-out infinite alternate;
+  transform-origin: center;
+  stroke: var(--crimson);
+}
+
+#inner3,
+#inner1 {
+  animation: loaderRotate 4s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+#center1 {
+  fill: var(--crimson);
+  animation: loaderRotate 2s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+@keyframes loaderRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

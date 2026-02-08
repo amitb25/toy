@@ -265,7 +265,7 @@ export default function BannersAdmin() {
                   value={formData.link}
                   onChange={(e) => setFormData({ ...formData, link: e.target.value })}
                   className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none"
-                  placeholder="/category/all"
+                  placeholder="/products"
                 />
               </div>
 

@@ -1,10 +1,12 @@
 'use client'
 
 import { Star, ShieldCheck, Truck, RotateCcw, Heart, Plus, Minus, ArrowLeft } from 'lucide-react'
+import Loader from '@/components/Loader'
 import { useCartStore } from '@/lib/store/useCartStore'
 import { useWishlistStore } from '@/lib/store/useWishlistStore'
 import { useState, useEffect, use } from 'react'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 
 export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -19,22 +21,16 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
     fetch(`/api/products`)
       .then(res => res.json())
       .then(data => {
-        const found = data.find((p: any) => p.id === id)
+        // Match by slug from API, or generated slug, or fallback to ID
+        const toSlug = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+        const found = data.find((p: any) => p.slug === id || toSlug(p.name) === id || p.id === id)
         if (found) setProduct(found)
       })
   }, [id])
 
   if (!mounted) return null
 
-  if (!product) {
-    return (
-      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-[var(--text-muted)]">Loading...</p>
-        </div>
-      </div>
-    )
-  }
+  if (!product) return <Loader text="Loading product..." />
 
   const images = product.images ? JSON.parse(product.images) : []
   const finalPrice = product.price - product.discount
@@ -44,7 +40,36 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
     for (let i = 0; i < qty; i++) {
       addItem(product)
     }
-    alert('Added to cart!')
+    const imgs = product.images ? JSON.parse(product.images) : []
+    toast.success(
+      (t) => (
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl overflow-hidden bg-[var(--bg-secondary)] flex-shrink-0 border border-[var(--sand)]/30">
+            <img
+              src={imgs[0] || 'https://images.unsplash.com/photo-1608889175123-8ee362201f81?q=80&w=100'}
+              alt={product.name}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div>
+            <p className="font-bold text-[var(--text-primary)]">Added to Cart!</p>
+            <p className="text-xs text-[var(--text-muted)] line-clamp-1">{product.name}</p>
+          </div>
+        </div>
+      ),
+      {
+        duration: 3000,
+        position: 'bottom-right',
+        style: {
+          background: 'var(--bg-card)',
+          color: 'var(--text-primary)',
+          padding: '16px 20px',
+          borderRadius: '16px',
+          border: '2px solid var(--sand)',
+          boxShadow: '0 20px 50px rgba(0,0,0,0.15)',
+        },
+      }
+    )
   }
 
   return (
@@ -167,7 +192,23 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                   Add to Cart
                 </button>
                 <button
-                  onClick={() => toggleWishlist(product)}
+                  onClick={() => {
+                    const wasInWishlist = inWishlist
+                    toggleWishlist(product)
+                    if (!wasInWishlist) {
+                      toast.success('Added to Wishlist', {
+                        duration: 2000,
+                        position: 'bottom-right',
+                        icon: '❤️',
+                        style: {
+                          background: 'var(--bg-card)',
+                          color: 'var(--text-primary)',
+                          borderRadius: '16px',
+                          border: '2px solid var(--crimson)',
+                        },
+                      })
+                    }
+                  }}
                   className={`p-4 rounded-lg border transition-all ${
                     inWishlist
                       ? 'bg-[var(--accent)] border-[var(--accent)] text-[var(--text-primary)]'

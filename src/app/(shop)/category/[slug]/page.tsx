@@ -1,7 +1,8 @@
 'use client'
 
-import { ChevronDown, ArrowLeft, Grid, Filter } from 'lucide-react'
-import { useParams } from 'next/navigation'
+import { ChevronDown, ArrowLeft, Grid, Filter, Search, X } from 'lucide-react'
+import Loader from '@/components/Loader'
+import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import ProductCard from '@/components/ProductCard'
@@ -9,7 +10,10 @@ import QuickView from '@/components/QuickView'
 
 export default function CategoryPage() {
   const params = useParams()
+  const searchParams = useSearchParams()
+  const router = useRouter()
   const slug = params?.slug as string || 'all'
+  const searchQuery = searchParams?.get('search') || ''
 
   const [category, setCategory] = useState<any>(null)
   const [products, setProducts] = useState<any[]>([])
@@ -25,11 +29,11 @@ export default function CategoryPage() {
         const catRes = await fetch('/api/categories')
         const catData = await catRes.json()
 
+        const toSlug = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
         let foundCategory = null
         if (Array.isArray(catData) && slug !== 'all') {
           foundCategory = catData.find((c: any) =>
-            c.id === slug ||
-            c.name.toLowerCase().replace(/\s+/g, '-') === slug.toLowerCase()
+            c.slug === slug || toSlug(c.name) === slug || c.id === slug
           )
           setCategory(foundCategory)
         }
@@ -39,6 +43,8 @@ export default function CategoryPage() {
         const data = await res.json()
         if (Array.isArray(data)) {
           let filtered = data
+
+          // Filter by category if not 'all'
           if (slug !== 'all') {
             filtered = data.filter((p: any) => {
               if (foundCategory) {
@@ -48,6 +54,18 @@ export default function CategoryPage() {
                      (slug === 'exclusives' && p.brand?.type === 'OWN')
             })
           }
+
+          // Filter by search query if present
+          if (searchQuery) {
+            const lowerQuery = searchQuery.toLowerCase()
+            filtered = filtered.filter((p: any) =>
+              p.name.toLowerCase().includes(lowerQuery) ||
+              p.description?.toLowerCase().includes(lowerQuery) ||
+              p.brand?.name?.toLowerCase().includes(lowerQuery) ||
+              p.category?.name?.toLowerCase().includes(lowerQuery)
+            )
+          }
+
           setProducts(filtered)
         }
       } catch (error) {
@@ -57,7 +75,11 @@ export default function CategoryPage() {
       }
     }
     fetchData()
-  }, [slug])
+  }, [slug, searchQuery])
+
+  const clearSearch = () => {
+    router.push(`/category/${slug}`)
+  }
 
   const categoryName = category?.name || (slug === 'all' ? 'All Products' : slug.replace(/-/g, ' '))
 
@@ -71,21 +93,12 @@ export default function CategoryPage() {
     }
   })
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-3 border-[var(--sand)]/20 border-t-[var(--sand)] rounded-full animate-spin" />
-          <p className="text-[var(--text-muted)] text-sm">Loading products...</p>
-        </div>
-      </div>
-    )
-  }
+  if (loading) return <Loader text="Loading products..." />
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
-      {/* Hero Section - Light mode compatible */}
-      <section className="relative bg-[var(--bg-secondary)] py-10 md:py-24 border-b border-[var(--border-light)]">
+      {/* Hero Section - Dark bg in light mode, lighter dark in dark mode */}
+      <section className="relative overflow-hidden bg-[var(--brand-banner-bg)] py-10 md:py-24">
         {/* Category Image Background (if available) */}
         {category?.image && (
           <div className="absolute inset-0 opacity-10">
@@ -94,28 +107,42 @@ export default function CategoryPage() {
         )}
 
         <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <Link href="/categories" className="inline-flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--sand)] transition-colors mb-6 md:mb-8 group">
+          <Link href="/categories" className="inline-flex items-center gap-2 text-[var(--pearl)]/60 hover:text-[var(--sand)] transition-colors mb-6 md:mb-8 group">
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             <span className="text-xs md:text-sm font-medium">All Categories</span>
           </Link>
 
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 md:gap-3 border border-[var(--sand)]/30 bg-[var(--sand)]/10 rounded-full px-4 md:px-6 py-2 md:py-3 mb-6 md:mb-8">
-              <Grid size={14} className="text-[var(--sand)]" />
-              <span className="text-[var(--sand)] text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em]">Category</span>
+            <div className="inline-flex items-center gap-2 md:gap-3 border border-[var(--sand)]/30 bg-[var(--sand)]/20 rounded-full px-4 md:px-6 py-2 md:py-3 mb-6 md:mb-8">
+              {searchQuery ? <Search size={14} className="text-[var(--sand)]" /> : <Grid size={14} className="text-[var(--sand)]" />}
+              <span className="text-[var(--sand)] text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em]">
+                {searchQuery ? 'Search Results' : 'Category'}
+              </span>
             </div>
 
-            <h1 className="text-3xl md:text-6xl lg:text-7xl font-thin text-[var(--text-primary)] tracking-tight mb-4 md:mb-6 capitalize">
-              {slug === 'all' ? (
+            <h1 className="text-3xl md:text-6xl lg:text-7xl font-thin text-[var(--pearl)] tracking-tight mb-4 md:mb-6 capitalize">
+              {searchQuery ? (
+                <>Search: <span className="font-bold text-[var(--sand)]">&quot;{searchQuery}&quot;</span></>
+              ) : slug === 'all' ? (
                 <>All <span className="font-bold text-[var(--sand)]">Products</span></>
               ) : (
                 <span className="font-bold text-[var(--sand)]">{categoryName}</span>
               )}
             </h1>
 
-            <p className="text-[var(--text-muted)] text-sm md:text-lg max-w-xl mx-auto">
-              {sortedProducts.length} {sortedProducts.length === 1 ? 'product' : 'products'} available
+            <p className="text-[var(--pearl)]/60 text-sm md:text-lg max-w-xl mx-auto">
+              {sortedProducts.length} {sortedProducts.length === 1 ? 'product' : 'products'} {searchQuery ? 'found' : 'available'}
             </p>
+
+            {searchQuery && (
+              <button
+                onClick={clearSearch}
+                className="mt-4 inline-flex items-center gap-2 text-[var(--pearl)]/60 hover:text-[var(--sand)] transition-colors text-sm"
+              >
+                <X size={14} />
+                Clear search
+              </button>
+            )}
           </div>
         </div>
       </section>
@@ -179,16 +206,32 @@ export default function CategoryPage() {
           ) : (
             <div className="text-center py-20">
               <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-[var(--sand)]/10 flex items-center justify-center">
-                <Grid size={40} className="text-[var(--sand)]" />
+                {searchQuery ? <Search size={40} className="text-[var(--sand)]" /> : <Grid size={40} className="text-[var(--sand)]" />}
               </div>
-              <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">No Products Found</h3>
-              <p className="text-[var(--text-muted)] mb-6">No products available in this category yet.</p>
-              <Link
-                href="/category/all"
-                className="inline-flex items-center gap-2 bg-[var(--sand)] text-white px-6 py-3 rounded-full font-semibold hover:bg-[var(--sand)]/90 transition-colors"
-              >
-                Browse All Products
-              </Link>
+              <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">
+                {searchQuery ? 'No Results Found' : 'No Products Found'}
+              </h3>
+              <p className="text-[var(--text-muted)] mb-6">
+                {searchQuery
+                  ? `No products match "${searchQuery}". Try a different search term.`
+                  : 'No products available in this category yet.'}
+              </p>
+              {searchQuery ? (
+                <button
+                  onClick={clearSearch}
+                  className="inline-flex items-center gap-2 bg-[var(--sand)] text-white px-6 py-3 rounded-full font-semibold hover:bg-[var(--sand)]/90 transition-colors"
+                >
+                  <X size={16} />
+                  Clear Search
+                </button>
+              ) : (
+                <Link
+                  href="/products"
+                  className="inline-flex items-center gap-2 bg-[var(--sand)] text-white px-6 py-3 rounded-full font-semibold hover:bg-[var(--sand)]/90 transition-colors"
+                >
+                  Browse All Products
+                </Link>
+              )}
             </div>
           )}
         </div>
