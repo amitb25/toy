@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { ShoppingBag, User, Search, Menu, X, Heart, Phone, Loader2 } from 'lucide-react'
+import { ShoppingCart, User, Search, Menu, X, Heart, Phone, Loader2 } from 'lucide-react'
 import { useCartStore } from '@/lib/store/useCartStore'
 import { useWishlistStore } from '@/lib/store/useWishlistStore'
 import { useEffect, useState, useRef, useCallback } from 'react'
@@ -96,10 +96,10 @@ export default function Header() {
   // Close search results when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        searchRef.current && !searchRef.current.contains(event.target as Node) &&
-        mobileSearchRef.current && !mobileSearchRef.current.contains(event.target as Node)
-      ) {
+      const target = event.target as Node
+      const insideDesktop = searchRef.current?.contains(target)
+      const insideMobile = mobileSearchRef.current?.contains(target)
+      if (!insideDesktop && !insideMobile) {
         setShowResults(false)
       }
     }
@@ -216,7 +216,7 @@ export default function Header() {
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-[var(--text-muted)]">
-                              <ShoppingBag size={16} />
+                              <ShoppingCart size={16} />
                             </div>
                           )}
                         </div>
@@ -251,7 +251,7 @@ export default function Header() {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-2 md:gap-4">
+            <div className="flex items-center gap-2 md:gap-4 relative z-10">
               {/* Mobile Search Toggle */}
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
@@ -284,7 +284,7 @@ export default function Header() {
                 className="flex items-center gap-1.5 md:gap-2 px-2.5 md:px-4 py-2 bg-[#161616] border border-[#F2F1ED]/30 hover:bg-[var(--btn-cart-hover-bg)] hover:border-[var(--btn-cart-hover-bg)] transition-all duration-300 group shadow-sm hover:shadow-md rounded-lg"
               >
                 <div className="relative">
-                  <ShoppingBag size={16} strokeWidth={1.5} className="text-[#F2F1ED] group-hover:text-white" />
+                  <ShoppingCart size={16} strokeWidth={1.5} className="text-[#F2F1ED] group-hover:text-white" />
                   {mounted && cartItems.length > 0 && (
                     <span className="absolute -top-1.5 -right-1.5 bg-[var(--crimson)] text-[var(--pearl)] h-4 w-4 rounded-full flex items-center justify-center text-[9px] font-semibold transition-colors">
                       {cartItems.length}
@@ -336,7 +336,7 @@ export default function Header() {
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-[var(--text-muted)]">
-                              <ShoppingBag size={16} />
+                              <ShoppingCart size={16} />
                             </div>
                           )}
                         </div>

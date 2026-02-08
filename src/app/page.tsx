@@ -60,17 +60,11 @@ export default function Home() {
 
       {/* 1. HERO BANNER SLIDER */}
       <section className="relative h-[350px] md:h-[650px] lg:h-[85vh] w-full overflow-hidden bg-[var(--obsidian)]">
-        {/* Animated Background Pattern */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,var(--crimson)_0%,transparent_50%)] animate-pulse" style={{ animationDuration: '4s' }} />
-          <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_50%,var(--sand)_0%,transparent_50%)] animate-pulse" style={{ animationDuration: '6s', animationDelay: '2s' }} />
-        </div>
-
         {banners.length === 0 ? (
           <div className="absolute inset-0">
             <img
               src="https://images.unsplash.com/photo-1569003339405-ea396a5a8a90?q=80&w=2000"
-              className="w-full h-full object-cover scale-105 animate-[kenburns_20s_ease-in-out_infinite_alternate]"
+              className="w-full h-full object-cover scale-105"
               alt="Hero"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[var(--obsidian)] via-[var(--obsidian)]/70 to-transparent" />
@@ -78,21 +72,20 @@ export default function Home() {
             <div className="absolute inset-0 flex items-center">
               <div className="container mx-auto px-4 md:px-6">
                 <div className="max-w-3xl">
-                  <div className="inline-flex items-center gap-3 bg-[var(--sand)]/10 backdrop-blur-md border border-[var(--sand)]/30 rounded-full px-5 py-2.5 mb-6 animate-[fadeInUp_0.8s_ease-out]">
+                  <div className="inline-flex items-center gap-3 bg-[var(--sand)]/10 backdrop-blur-md border border-[var(--sand)]/30 rounded-full px-5 py-2.5 mb-6">
                     <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--sand)] opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--sand)]"></span>
                     </span>
                     <span className="text-[var(--sand)] text-xs font-bold uppercase tracking-[0.3em]">Premium Collection</span>
                   </div>
-                  <h1 className="text-4xl md:text-6xl lg:text-8xl font-extralight text-[var(--pearl)] tracking-tight mb-4 md:mb-6 leading-[1.1] animate-[fadeInUp_0.8s_ease-out_0.2s_both]">
+                  <h1 className="text-4xl md:text-6xl lg:text-8xl font-extralight text-[var(--pearl)] tracking-tight mb-4 md:mb-6 leading-[1.1]">
                     Discover Our <br />
-                    <span className="font-black bg-gradient-to-r from-[var(--sand)] via-[var(--crimson)] to-[var(--sand)] bg-clip-text text-transparent bg-[length:200%_auto] animate-[shimmer_3s_linear_infinite]">Exclusive</span> Range
+                    <span className="font-black text-[var(--sand)]">Exclusive</span> Range
                   </h1>
-                  <p className="text-[var(--pearl)]/60 text-base md:text-xl mb-8 md:mb-10 max-w-xl leading-relaxed animate-[fadeInUp_0.8s_ease-out_0.4s_both]">
+                  <p className="text-[var(--pearl)]/60 text-base md:text-xl mb-8 md:mb-10 max-w-xl leading-relaxed">
                     Curated selection of premium products for the discerning collector
                   </p>
-                  <div className="flex flex-wrap gap-4 animate-[fadeInUp_0.8s_ease-out_0.6s_both]">
+                  <div className="flex flex-wrap gap-4">
                     <Link href="/products" className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)] hover:scale-105">
                       <span className="absolute inset-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
                       <span className="relative">Shop Now</span>
@@ -121,23 +114,18 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-r from-[var(--obsidian)]/90 via-[var(--obsidian)]/50 to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[var(--obsidian)]/50 via-transparent to-transparent" />
 
-                {/* Decorative Elements */}
-                <div className="absolute top-1/4 right-10 w-32 h-32 border border-[var(--sand)]/20 rounded-full animate-[spin_20s_linear_infinite] hidden lg:block" />
-                <div className="absolute bottom-1/4 right-20 w-20 h-20 border border-[var(--crimson)]/20 rounded-full animate-[spin_15s_linear_infinite_reverse] hidden lg:block" />
-
                 <div className="absolute inset-0 flex items-end md:items-center pb-16 md:pb-0">
                   <div className="container mx-auto px-4 md:px-6">
                     <div className={`max-w-3xl transition-all duration-700 ${index === currentBanner ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
                       <div className="inline-flex items-center gap-2 md:gap-3 bg-[var(--sand)]/10 backdrop-blur-md border border-[var(--sand)]/30 rounded-full px-3 py-1.5 md:px-5 md:py-2.5 mb-3 md:mb-6">
                         <span className="relative flex h-1.5 w-1.5 md:h-2 md:w-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--sand)] opacity-75"></span>
                           <span className="relative inline-flex rounded-full h-1.5 w-1.5 md:h-2 md:w-2 bg-[var(--sand)]"></span>
                         </span>
                         <span className="text-[var(--sand)] text-[8px] md:text-xs font-bold uppercase tracking-[0.2em] md:tracking-[0.3em]">Featured</span>
                       </div>
                       <h1 className="text-2xl md:text-6xl lg:text-8xl font-extralight text-[var(--pearl)] tracking-tight mb-2 md:mb-6 leading-[1.1]">
                         {banner.title?.split(' ').map((word: string, i: number) => (
-                          <span key={i} className={i === 1 ? 'font-black bg-gradient-to-r from-[var(--sand)] via-[var(--crimson)] to-[var(--sand)] bg-clip-text text-transparent bg-[length:200%_auto] animate-[shimmer_3s_linear_infinite]' : ''}>
+                          <span key={i} className={i === 1 ? 'font-black text-[var(--sand)]' : ''}>
                             {word}{' '}
                           </span>
                         ))}
@@ -190,7 +178,7 @@ export default function Home() {
                     >
                       <div className={`relative h-1 rounded-full overflow-hidden transition-all duration-500 ${index === currentBanner ? 'w-16 bg-[var(--pearl)]/20' : 'w-8 bg-[var(--pearl)]/10 hover:bg-[var(--pearl)]/20'}`}>
                         {index === currentBanner && (
-                          <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] rounded-full animate-[progress_5s_linear]" style={{ width: '100%' }} />
+                          <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] rounded-full" style={{ width: '100%' }} />
                         )}
                       </div>
                       <span className={`absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold transition-all duration-300 ${index === currentBanner ? 'text-[var(--sand)] opacity-100' : 'text-[var(--pearl)]/40 opacity-0 group-hover:opacity-100'}`}>
@@ -220,41 +208,26 @@ export default function Home() {
 
       {/* 3. OUR BRANDS SECTION - Always shows after categories */}
       <section className="py-20 md:py-32 bg-[var(--bg-primary)] relative overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[var(--sand)]/10 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '8s' }} />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[var(--crimson)]/8 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '6s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-[var(--sand)]/5 to-transparent rounded-full" />
-
-        {/* Floating Decorative Elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 border border-[var(--sand)]/20 rounded-full animate-[float_6s_ease-in-out_infinite] hidden lg:block" />
-        <div className="absolute bottom-32 right-16 w-32 h-32 border border-[var(--crimson)]/15 rounded-full animate-[float_8s_ease-in-out_infinite_reverse] hidden lg:block" />
-        <div className="absolute top-1/3 right-1/4 w-4 h-4 bg-[var(--sand)]/40 rounded-full animate-[float_4s_ease-in-out_infinite] hidden lg:block" />
-
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           {/* Section Header - Premium Design */}
           <div className="text-center mb-16 md:mb-24">
-            {/* Animated Badge */}
-            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-[var(--sand)]/20 to-[var(--crimson)]/20 backdrop-blur-sm border border-[var(--sand)]/30 rounded-full px-6 py-3 mb-8 animate-[fadeInUp_0.8s_ease-out]">
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-[var(--sand)]/20 to-[var(--crimson)]/20 backdrop-blur-sm border border-[var(--sand)]/30 rounded-full px-6 py-3 mb-8">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--sand)] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)]"></span>
               </span>
               <span className="text-[var(--sand)] text-[11px] font-bold uppercase tracking-[0.3em]">Exclusive Collection</span>
             </div>
 
-            {/* Main Heading with Animation */}
-            <h2 className="text-4xl md:text-6xl lg:text-7xl font-extralight text-[var(--text-primary)] tracking-tight mb-6 animate-[fadeInUp_0.8s_ease-out_0.2s_both]">
-              Our <span className="font-black bg-gradient-to-r from-[var(--sand)] via-[var(--crimson)] to-[var(--sand)] bg-clip-text text-transparent bg-[length:200%_auto] animate-[shimmer_3s_linear_infinite]">Premium</span> Collection
+            <h2 className="text-4xl md:text-6xl lg:text-7xl font-extralight text-[var(--text-primary)] tracking-tight mb-6">
+              Our <span className="font-black text-[var(--sand)]">Premium</span> Collection
             </h2>
 
-            {/* Subtitle */}
-            <p className="text-[var(--text-muted)] text-base md:text-lg max-w-xl mx-auto leading-relaxed animate-[fadeInUp_0.8s_ease-out_0.4s_both]">
+            <p className="text-[var(--text-muted)] text-base md:text-lg max-w-xl mx-auto leading-relaxed">
               Handpicked products crafted with passion, designed for excellence
             </p>
 
-            {/* Brand Logo/Badge - Show if own brand exists */}
             {ownBrand && (
-              <div className="mt-10 inline-flex items-center gap-5 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl px-8 py-5 shadow-xl shadow-[var(--sand)]/10 hover:shadow-2xl hover:shadow-[var(--sand)]/20 transition-all duration-500 hover:-translate-y-1 animate-[fadeInUp_0.8s_ease-out_0.6s_both]">
+              <div className="mt-10 inline-flex items-center gap-5 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl px-8 py-5 shadow-xl shadow-[var(--sand)]/10 hover:shadow-2xl hover:shadow-[var(--sand)]/20 transition-all duration-500 hover:-translate-y-1">
                 {ownBrand.logo ? (
                   <img src={ownBrand.logo} alt={ownBrand.name} className="w-14 h-14 rounded-xl object-cover ring-2 ring-[var(--sand)]/30" />
                 ) : (
@@ -274,7 +247,7 @@ export default function Home() {
           {ownBrandProducts.length > 0 ? (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-8">
               {ownBrandProducts.slice(0, 8).map((product, index) => (
-                <div key={product.id} className="animate-[fadeInUp_0.6s_ease-out_both]" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div key={product.id} className="">
                   <ProductCard product={product} onQuickView={setQuickViewProduct} />
                 </div>
               ))}
@@ -282,7 +255,7 @@ export default function Home() {
           ) : products.length > 0 ? (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-8">
               {products.filter(p => p.featured).slice(0, 8).map((product, index) => (
-                <div key={product.id} className="animate-[fadeInUp_0.6s_ease-out_both]" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div key={product.id} className="">
                   <ProductCard product={product} onQuickView={setQuickViewProduct} />
                 </div>
               ))}
@@ -338,7 +311,6 @@ export default function Home() {
               {/* Badge */}
               <div className="inline-flex items-center gap-3 border border-[var(--sand)]/30 bg-[var(--sand)]/10 rounded-full px-6 py-3 mb-8">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--crimson)] opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--crimson)]"></span>
                 </span>
                 <span className="text-[var(--sand)] text-[11px] font-bold uppercase tracking-[0.3em]">Just Arrived</span>
