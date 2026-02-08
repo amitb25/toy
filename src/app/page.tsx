@@ -14,6 +14,7 @@ export default function Home() {
   const [categories, setCategories] = useState<any[]>([])
   const [brands, setBrands] = useState<any[]>([])
   const [banners, setBanners] = useState<any[]>([])
+  const [bannersLoaded, setBannersLoaded] = useState(false)
   const [bannerCTAs, setBannerCTAs] = useState<any[]>([])
   const [currentBanner, setCurrentBanner] = useState(0)
   const [quickViewProduct, setQuickViewProduct] = useState<any>(null)
@@ -23,7 +24,7 @@ export default function Home() {
     fetch('/api/products').then(res => res.json()).then(data => Array.isArray(data) ? setProducts(data) : setProducts([])).catch(console.error)
     fetch('/api/categories').then(res => res.json()).then(data => Array.isArray(data) ? setCategories(data) : setCategories([])).catch(console.error)
     fetch('/api/brands').then(res => res.json()).then(data => Array.isArray(data) ? setBrands(data) : setBrands([])).catch(console.error)
-    fetch('/api/banners').then(res => res.json()).then(data => Array.isArray(data) ? setBanners(data) : setBanners([])).catch(console.error)
+    fetch('/api/banners').then(res => res.json()).then(data => { Array.isArray(data) ? setBanners(data) : setBanners([]); setBannersLoaded(true) }).catch(() => setBannersLoaded(true))
     fetch('/api/banner-cta').then(res => res.json()).then(data => Array.isArray(data) ? setBannerCTAs(data) : setBannerCTAs([])).catch(console.error)
   }, [])
 
@@ -60,7 +61,9 @@ export default function Home() {
 
       {/* 1. HERO BANNER SLIDER */}
       <section className="relative h-[350px] md:h-[650px] lg:h-[85vh] w-full overflow-hidden bg-[var(--obsidian)]">
-        {banners.length === 0 ? (
+        {!bannersLoaded ? (
+          <div className="absolute inset-0 bg-[var(--obsidian)]" />
+        ) : banners.length === 0 ? (
           <div className="absolute inset-0">
             <img
               src="https://images.unsplash.com/photo-1569003339405-ea396a5a8a90?q=80&w=2000"
