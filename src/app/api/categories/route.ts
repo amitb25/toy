@@ -13,13 +13,17 @@ const sampleCategories = [
   { id: '5', name: 'Puzzles', slug: 'puzzles', image: null, enabled: true, _count: { products: 0 } }
 ]
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url)
+    const all = searchParams.get('all') === 'true'
+
     const categories = await prisma.category.findMany({
+      where: all ? {} : { enabled: true },
       include: { _count: { select: { products: true } } }
     })
 
-    if (categories.length === 0) {
+    if (categories.length === 0 && !all) {
       return NextResponse.json(sampleCategories)
     }
 
@@ -33,8 +37,6 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    console.log("Creating category:", JSON.stringify(body))
-
     const slug = body.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
     const category = await prisma.category.create({
       data: {

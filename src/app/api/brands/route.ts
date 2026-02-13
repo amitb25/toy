@@ -12,13 +12,17 @@ const sampleBrands = [
   { id: '4', name: 'Funko', logo: null, type: 'THIRD_PARTY', status: true, _count: { products: 1 } }
 ]
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url)
+    const all = searchParams.get('all') === 'true'
+
     const brands = await prisma.brand.findMany({
+      where: all ? {} : { status: true },
       include: { _count: { select: { products: true } } }
     })
 
-    if (brands.length === 0) {
+    if (brands.length === 0 && !all) {
       const withSlugs = sampleBrands.map(b => ({
         ...b,
         slug: b.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')

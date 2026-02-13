@@ -6,11 +6,18 @@ import { useEffect, useState } from 'react'
 
 export default function OrderSuccessPage() {
   const [mounted, setMounted] = useState(false)
-  const [orderId, setOrderId] = useState('')
+  const [orderData, setOrderData] = useState({ orderId: '', totalAmount: 0, email: '' })
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     setMounted(true)
-    setOrderId("AHQ-" + Math.floor(100000 + Math.random() * 900000))
+    try {
+      const stored = sessionStorage.getItem('lastOrder')
+      if (stored) {
+        setOrderData(JSON.parse(stored))
+        sessionStorage.removeItem('lastOrder')
+      }
+    } catch {}
   }, [])
 
   if (!mounted) return null
@@ -34,19 +41,23 @@ export default function OrderSuccessPage() {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[var(--border-color)] pb-4 mb-4">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)] mb-1">Order ID</p>
-                <p className="text-lg md:text-xl font-black text-[var(--accent)]">{orderId}</p>
+                <p className="text-lg md:text-xl font-black text-[var(--accent)]">{orderData.orderId || '---'}</p>
               </div>
               <div className="sm:text-right">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)] mb-1">Total Paid</p>
-                <p className="text-lg md:text-xl font-black text-[var(--text-primary)]">₹2,497</p>
+                <p className="text-lg md:text-xl font-black text-[var(--text-primary)]">
+                  {orderData.totalAmount ? `₹${orderData.totalAmount.toLocaleString()}` : '---'}
+                </p>
               </div>
             </div>
 
             <div className="space-y-3">
-              <div className="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
-                <Mail size={18} className="text-[var(--accent)] flex-shrink-0" />
-                <span>Confirmation sent to <strong className="text-[var(--text-primary)]">your email</strong></span>
-              </div>
+              {orderData.email && (
+                <div className="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
+                  <Mail size={18} className="text-[var(--accent)] flex-shrink-0" />
+                  <span>Confirmation sent to <strong className="text-[var(--text-primary)]">{orderData.email}</strong></span>
+                </div>
+              )}
               <div className="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
                 <MessageSquare size={18} className="text-green-500 flex-shrink-0" />
                 <span>Order updates via <strong className="text-[var(--text-primary)]">WhatsApp</strong></span>
@@ -67,7 +78,7 @@ export default function OrderSuccessPage() {
               <ShoppingBag size={18} /> Continue Shopping
             </Link>
             <Link
-              href="/account"
+              href="/track-order"
               className="flex-1 flex items-center justify-center gap-2 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] py-4 rounded-lg font-bold uppercase tracking-wider text-sm hover:border-[var(--accent)] hover:text-[var(--accent)] transition-all"
             >
               Track Order <ArrowRight size={18} />

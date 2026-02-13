@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Box, Tags, ShoppingBag, Users, Settings, LogOut, Shield, Menu, X, Sun, Moon, Image, Megaphone } from 'lucide-react'
+import { LayoutDashboard, Box, Tags, ShoppingBag, Users, Settings, LogOut, Shield, Menu, X, Sun, Moon, Image, Megaphone, MessageCircle } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
 
@@ -10,6 +10,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isDark, setIsDark] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [notifications, setNotifications] = useState({ pendingOrders: 0, unreadMessages: 0 })
 
   useEffect(() => {
     const theme = localStorage.getItem('theme')
@@ -17,6 +19,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const shouldBeDark = theme === 'dark' || (!theme && prefersDark)
     setIsDark(shouldBeDark)
     document.documentElement.setAttribute('data-theme', shouldBeDark ? 'dark' : 'light')
+    setMounted(true)
+
+    // Fetch notification counts
+    const fetchNotifications = () => {
+      fetch('/api/admin/notifications')
+        .then(res => res.json())
+        .then(data => setNotifications(data))
+        .catch(() => {})
+    }
+    fetchNotifications()
+    const interval = setInterval(fetchNotifications, 30000)
+    window.addEventListener('notifications-updated', fetchNotifications)
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('notifications-updated', fetchNotifications)
+    }
   }, [])
 
   const toggleTheme = () => {
@@ -33,7 +51,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { icon: Box, label: 'Products', href: '/admin/products' },
     { icon: Tags, label: 'Categories', href: '/admin/categories' },
     { icon: Shield, label: 'Brands', href: '/admin/brands' },
-    { icon: ShoppingBag, label: 'Orders', href: '/admin/orders' },
+    { icon: ShoppingBag, label: 'Orders', href: '/admin/orders', badge: notifications.pendingOrders },
+    { icon: MessageCircle, label: 'Messages', href: '/admin/messages', badge: notifications.unreadMessages },
     { icon: Users, label: 'Customers', href: '/admin/customers' },
     { icon: Settings, label: 'Settings', href: '/admin/settings' },
   ]
@@ -105,6 +124,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             >
               <item.icon size={18} />
               {item.label}
+              {(item.badge ?? 0) > 0 && (
+                <span className={`ml-auto min-w-[20px] h-5 flex items-center justify-center rounded-full text-[10px] font-black px-1.5 ${
+                  isActive(item.href)
+                    ? 'bg-white/25 text-white'
+                    : 'bg-[#e23636] text-white'
+                }`}>
+                  {(item.badge ?? 0) > 99 ? '99+' : item.badge}
+                </span>
+              )}
             </Link>
           ))}
         </nav>
@@ -138,7 +166,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               onClick={toggleTheme}
               className="p-2.5 rounded-xl bg-bg-card border border-border hover:border-accent/50 hover:bg-accent/10 transition-all"
             >
-              {isDark ? <Sun size={18} className="text-yellow-500" /> : <Moon size={18} className="text-text-muted" />}
+              {mounted ? (isDark ? <Sun size={18} className="text-yellow-500" /> : <Moon size={18} className="text-text-muted" />) : <div className="w-[18px] h-[18px]" />}
             </button>
             <div className="text-right hidden sm:block">
               <p className="text-sm font-black text-text-primary">Admin Hero</p>

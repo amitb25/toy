@@ -27,7 +27,7 @@ export default function CategoriesAdmin() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('/api/categories')
+      const res = await fetch('/api/categories?all=true')
       const data = await res.json()
       if (Array.isArray(data)) setCategories(data)
     } catch (error) {

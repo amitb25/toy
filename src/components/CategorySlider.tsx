@@ -106,8 +106,8 @@ export default function CategorySlider({ categories }: CategorySliderProps) {
           </button>
 
           {/* Gradient Fade Edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[var(--bg-secondary)] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[var(--bg-secondary)] to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[var(--bg-secondary)] to-transparent z-10 pointer-events-none opacity-80" />
+          <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[var(--bg-secondary)] to-transparent z-10 pointer-events-none opacity-80" />
 
           {/* Categories Slider */}
           <div

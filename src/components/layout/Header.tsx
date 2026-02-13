@@ -127,9 +127,9 @@ export default function Header() {
             <span className="hidden md:block">Free Shipping on Rs.1999+</span>
           </div>
           <div className="flex items-center gap-4 text-[var(--topbar-text)] text-[10px] font-semibold tracking-wider">
-            <span className="hidden sm:block">Track Order</span>
+            <Link href="/track-order" className="hidden sm:block hover:text-[var(--sand)] transition-colors">Track Order</Link>
             <span className="hidden sm:block opacity-30">|</span>
-            <span>Help</span>
+            <Link href="/faq" className="hover:text-[var(--sand)] transition-colors">Help</Link>
           </div>
         </div>
       </div>
@@ -266,11 +266,9 @@ export default function Header() {
               {/* Wishlist */}
               <Link href="/wishlist" className="hidden md:flex p-2 text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors relative">
                 <Heart size={18} strokeWidth={1.5} />
-                {mounted && wishlistItems.length > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-[var(--accent)] text-white h-4 w-4 rounded-full flex items-center justify-center text-[9px] font-medium">
-                    {wishlistItems.length}
-                  </span>
-                )}
+                <span className="absolute -top-0.5 -right-0.5 bg-[var(--accent)] text-white h-4 w-4 rounded-full flex items-center justify-center text-[9px] font-medium" style={{ display: mounted && wishlistItems.length > 0 ? 'flex' : 'none' }} suppressHydrationWarning>
+                  {mounted ? wishlistItems.length : 0}
+                </span>
               </Link>
 
               {/* Account */}
@@ -285,11 +283,9 @@ export default function Header() {
               >
                 <div className="relative">
                   <ShoppingCart size={16} strokeWidth={1.5} className="text-[#F2F1ED] group-hover:text-white" />
-                  {mounted && cartItems.length > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 bg-[var(--crimson)] text-[var(--pearl)] h-4 w-4 rounded-full flex items-center justify-center text-[9px] font-semibold transition-colors">
-                      {cartItems.length}
-                    </span>
-                  )}
+                  <span className="absolute -top-1.5 -right-1.5 bg-[var(--crimson)] text-[var(--pearl)] h-4 w-4 rounded-full flex items-center justify-center text-[9px] font-semibold transition-colors" style={{ display: mounted && cartItems.length > 0 ? 'flex' : 'none' }} suppressHydrationWarning>
+                    {mounted ? cartItems.length : 0}
+                  </span>
                 </div>
                 <span className="hidden sm:block text-[#F2F1ED] group-hover:text-white text-xs font-semibold uppercase tracking-wider transition-colors">Cart</span>
               </Link>

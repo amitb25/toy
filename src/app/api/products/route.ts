@@ -158,8 +158,6 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    console.log("Creating product with data:", JSON.stringify(body))
-
     const product = await prisma.product.create({
       data: {
         name: body.name,

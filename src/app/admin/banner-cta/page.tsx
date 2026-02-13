@@ -13,6 +13,8 @@ interface BannerCTA {
   image: string
   buttonText: string
   buttonLink: string
+  showTitle: boolean
+  showButton: boolean
   active: boolean
   order: number
 }
@@ -39,7 +41,7 @@ export default function BannerCTAAdmin() {
 
   const fetchBanners = async () => {
     try {
-      const res = await fetch('/api/banner-cta')
+      const res = await fetch('/api/banner-cta?all=true')
       const data = await res.json()
       if (Array.isArray(data)) setBanners(data)
     } catch (error) {
@@ -51,7 +53,7 @@ export default function BannerCTAAdmin() {
 
   const openAddModal = () => {
     setEditingBanner(null)
-    setFormData({ title: '', subtitle: '', description: '', image: '', buttonText: 'Shop Now', buttonLink: '', active: true, order: banners.length })
+    setFormData({ title: '', subtitle: '', description: '', image: '', buttonText: 'Shop Now', buttonLink: '', showTitle: true, showButton: true, active: true, order: banners.length })
     setShowModal(true)
   }
 
@@ -64,6 +66,8 @@ export default function BannerCTAAdmin() {
       image: banner.image,
       buttonText: banner.buttonText,
       buttonLink: banner.buttonLink,
+      showTitle: banner.showTitle,
+      showButton: banner.showButton,
       active: banner.active,
       order: banner.order
     })
@@ -272,14 +276,34 @@ export default function BannerCTAAdmin() {
                 />
               </div>
 
-              <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  checked={formData.active}
-                  onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                  className="w-5 h-5 rounded-lg border-2 border-border bg-bg-input text-green-500"
-                />
-                <span className="text-sm font-bold text-text-secondary">Active</span>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={formData.active}
+                    onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
+                    className="w-5 h-5 rounded-lg border-2 border-border bg-bg-input text-green-500"
+                  />
+                  <span className="text-sm font-bold text-text-secondary">Active</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={formData.showTitle}
+                    onChange={(e) => setFormData({ ...formData, showTitle: e.target.checked })}
+                    className="w-5 h-5 rounded-lg border-2 border-border bg-bg-input text-green-500"
+                  />
+                  <span className="text-sm font-bold text-text-secondary">Show Title</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={formData.showButton}
+                    onChange={(e) => setFormData({ ...formData, showButton: e.target.checked })}
+                    className="w-5 h-5 rounded-lg border-2 border-border bg-bg-input text-green-500"
+                  />
+                  <span className="text-sm font-bold text-text-secondary">Show Button</span>
+                </div>
               </div>
 
               <div className="flex gap-3 pt-4">

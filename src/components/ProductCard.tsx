@@ -4,7 +4,7 @@ import { Heart, ShoppingCart, Eye, Star, Zap, Sparkles } from 'lucide-react'
 import { useCartStore } from '@/lib/store/useCartStore'
 import { useWishlistStore } from '@/lib/store/useWishlistStore'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import toast from 'react-hot-toast'
 
 interface Product {
@@ -35,18 +35,33 @@ export default function ProductCard({ product, onQuickView, variant = 'default' 
   const { toggleWishlist, isInWishlist } = useWishlistStore()
   const [imageLoaded, setImageLoaded] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => { setMounted(true) }, [])
 
   const images = product.images ? JSON.parse(product.images) : []
   const finalPrice = product.price - product.discount
-  const inWishlist = isInWishlist(product.id)
+  const inWishlist = mounted && isInWishlist(product.id)
   const discountPercent = product.discount > 0 ? Math.round((product.discount / product.price) * 100) : 0
 
-  // Check if product is new (within last 7 days)
-  const isNew = product.createdAt && (Date.now() - new Date(product.createdAt).getTime()) < 7 * 24 * 60 * 60 * 1000
+  // Check if product is new (within last 7 days) - computed after mount to avoid server/client mismatch
+  const [isNew, setIsNew] = useState(false)
+  useEffect(() => {
+    if (product.createdAt) {
+      setIsNew((Date.now() - new Date(product.createdAt).getTime()) < 7 * 24 * 60 * 60 * 1000)
+    }
+  }, [product.createdAt])
 
-  // Mock rating
+  // Deterministic review count derived from product ID
   const rating = 4.5
-  const reviewCount = Math.floor(Math.random() * 100) + 10
+  const reviewCount = useMemo(() => {
+    let hash = 0
+    for (let i = 0; i < product.id.length; i++) {
+      hash = ((hash << 5) - hash) + product.id.charCodeAt(i)
+      hash |= 0
+    }
+    return Math.abs(hash % 91) + 10
+  }, [product.id])
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -55,8 +70,8 @@ export default function ProductCard({ product, onQuickView, variant = 'default' 
 
     toast.success(
       (t) => (
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl overflow-hidden bg-[var(--bg-secondary)] flex-shrink-0 border border-[var(--sand)]/30">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-lg overflow-hidden bg-[var(--bg-secondary)] flex-shrink-0 border border-[var(--sand)]/30">
             <img
               src={images[0] || 'https://images.unsplash.com/photo-1608889175123-8ee362201f81?q=80&w=100'}
               alt={product.name}
@@ -64,21 +79,21 @@ export default function ProductCard({ product, onQuickView, variant = 'default' 
             />
           </div>
           <div>
-            <p className="font-bold text-[var(--text-primary)]">Added to Cart!</p>
-            <p className="text-xs text-[var(--text-muted)] line-clamp-1">{product.name}</p>
+            <p className="font-bold text-sm text-[var(--text-primary)]">Added to Cart!</p>
+            <p className="text-[11px] text-[var(--text-muted)] line-clamp-1">{product.name}</p>
           </div>
         </div>
       ),
       {
-        duration: 3000,
+        duration: 2000,
         position: 'bottom-right',
         style: {
           background: 'var(--bg-card)',
           color: 'var(--text-primary)',
-          padding: '16px 20px',
-          borderRadius: '16px',
+          padding: '10px 14px',
+          borderRadius: '14px',
           border: '2px solid var(--sand)',
-          boxShadow: '0 20px 50px rgba(0,0,0,0.15)',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
         },
       }
     )
@@ -112,7 +127,7 @@ export default function ProductCard({ product, onQuickView, variant = 'default' 
 
   return (
     <div
-      className="group relative bg-[var(--bg-card)] overflow-hidden rounded-2xl border border-[var(--border-light)] hover:border-[var(--sand)]/40 transition-colors duration-300 shadow-sm"
+      className="group relative bg-[var(--bg-card)] overflow-hidden rounded-2xl border border-[var(--border-light)] hover:border-[var(--sand)]/40 transition-colors duration-300 shadow-sm mb-4"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

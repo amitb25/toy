@@ -22,8 +22,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params
     const body = await request.json()
-    console.log("Updating BannerCTA:", id, JSON.stringify(body))
-
     // Use upsert to handle sample data that doesn't exist in the database
     const bannerCTA = await prisma.bannerCTA.upsert({
       where: { id },
@@ -34,6 +32,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         image: body.image,
         buttonText: body.buttonText,
         buttonLink: body.buttonLink,
+        showTitle: body.showTitle,
+        showButton: body.showButton,
         active: body.active,
         order: body.order
       },
@@ -44,6 +44,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         image: body.image,
         buttonText: body.buttonText || 'Shop Now',
         buttonLink: body.buttonLink,
+        showTitle: body.showTitle ?? true,
+        showButton: body.showButton ?? true,
         active: body.active ?? true,
         order: body.order || 0
       }
@@ -59,8 +61,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
-    console.log("Deleting BannerCTA:", id)
-
     // Check if record exists before trying to delete
     const existing = await prisma.bannerCTA.findUnique({ where: { id } })
     if (!existing) {

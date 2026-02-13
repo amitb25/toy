@@ -17,6 +17,9 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       {children}
       <Toaster
         position="bottom-right"
+        containerStyle={{
+          bottom: 90,
+        }}
         toastOptions={{
           duration: 3000,
           style: {

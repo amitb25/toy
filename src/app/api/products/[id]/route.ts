@@ -28,8 +28,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params
     const body = await request.json()
-    console.log("Updating product:", id, JSON.stringify(body))
-
     const product = await prisma.product.update({
       where: { id },
       data: {
@@ -62,8 +60,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
-    console.log("Deleting product:", id)
-
     await prisma.product.delete({ where: { id } })
     return NextResponse.json({ success: true })
   } catch (error: unknown) {

@@ -28,7 +28,7 @@ export default function BrandsAdmin() {
 
   const fetchBrands = async () => {
     try {
-      const res = await fetch('/api/brands')
+      const res = await fetch('/api/brands?all=true')
       const data = await res.json()
       if (Array.isArray(data)) setBrands(data)
     } catch (error) {

@@ -19,14 +19,17 @@ const sampleBannerCTA = [
   }
 ]
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url)
+    const all = searchParams.get('all') === 'true'
+
     const bannerCTAs = await prisma.bannerCTA.findMany({
-      where: { active: true },
+      where: all ? {} : { active: true },
       orderBy: { order: 'asc' }
     })
 
-    if (bannerCTAs.length === 0) {
+    if (bannerCTAs.length === 0 && !all) {
       return NextResponse.json(sampleBannerCTA)
     }
 
@@ -40,8 +43,6 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    console.log("Creating BannerCTA:", JSON.stringify(body))
-
     const bannerCTA = await prisma.bannerCTA.create({
       data: {
         title: body.title,
@@ -50,6 +51,8 @@ export async function POST(request: Request) {
         image: body.image,
         buttonText: body.buttonText || 'Shop Now',
         buttonLink: body.buttonLink,
+        showTitle: body.showTitle ?? true,
+        showButton: body.showButton ?? true,
         active: body.active ?? true,
         order: body.order || 0
       }

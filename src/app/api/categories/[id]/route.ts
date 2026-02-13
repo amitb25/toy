@@ -25,8 +25,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params
     const body = await request.json()
-    console.log("Updating category:", id, JSON.stringify(body))
-
     const slug = body.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
     const category = await prisma.category.update({
       where: { id },
@@ -48,8 +46,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
-    console.log("Deleting category:", id)
-
     await prisma.category.delete({ where: { id } })
     return NextResponse.json({ success: true })
   } catch (error: unknown) {

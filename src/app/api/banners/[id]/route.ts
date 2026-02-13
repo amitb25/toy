@@ -22,8 +22,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params
     const body = await request.json()
-    console.log("Updating banner:", id, JSON.stringify(body))
-
     const banner = await prisma.banner.update({
       where: { id },
       data: {
@@ -46,8 +44,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
-    console.log("Deleting banner:", id)
-
     await prisma.banner.delete({ where: { id } })
     return NextResponse.json({ success: true })
   } catch (error: unknown) {

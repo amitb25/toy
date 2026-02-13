@@ -109,6 +109,16 @@ model Wishlist {
   @@unique([userId, productId])
 }
 
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
 model BannerCTA {
   id          String   @id @default(cuid())
   title       String
@@ -117,6 +127,8 @@ model BannerCTA {
   image       String
   buttonText  String   @default("Shop Now")
   buttonLink  String
+  showTitle   Boolean  @default(true)
+  showButton  Boolean  @default(true)
   active      Boolean  @default(true)
   order       Int      @default(0)
   createdAt   DateTime @default(now())

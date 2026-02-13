@@ -13,7 +13,7 @@ export default function CartPage() {
   const incrementQuantity = useCartStore((state: any) => state.incrementQuantity)
   const decrementQuantity = useCartStore((state: any) => state.decrementQuantity)
 
-  useEffect(() => { setMounted(true) }, [])
+  useEffect(() => { window.scrollTo(0, 0); setMounted(true) }, [])
 
   if (!mounted) return null
 

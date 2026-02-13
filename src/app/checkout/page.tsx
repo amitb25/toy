@@ -1,17 +1,29 @@
 'use client'
 
-import { ShieldCheck, CreditCard, Truck, Wallet, ArrowLeft } from 'lucide-react'
+import { ShieldCheck, CreditCard, Truck, Wallet, ArrowLeft, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCartStore } from '@/lib/store/useCartStore'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 
 export default function CheckoutPage() {
   const router = useRouter()
   const clearCart = useCartStore((state: any) => state.clearCart)
   const items = useCartStore((state: any) => state.items)
   const [mounted, setMounted] = useState(false)
-  const [selectedPayment, setSelectedPayment] = useState('upi')
+  const [selectedPayment, setSelectedPayment] = useState('cod')
+  const [placing, setPlacing] = useState(false)
+
+  // Form state
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    pincode: '',
+  })
 
   useEffect(() => { setMounted(true) }, [])
 
@@ -19,13 +31,58 @@ export default function CheckoutPage() {
   const shipping = subtotal > 1999 ? 0 : 99
   const total = subtotal + shipping
 
-  const handlePlaceOrder = () => {
+  const updateField = (field: string, value: string) => {
+    setForm(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handlePlaceOrder = async () => {
     if (items.length === 0) {
-      alert("Your cart is empty!")
+      toast.error('Your cart is empty!')
       return
     }
-    clearCart()
-    router.push('/checkout/success')
+
+    if (!form.name || !form.phone || !form.address || !form.city || !form.pincode) {
+      toast.error('Please fill all shipping details')
+      return
+    }
+
+    setPlacing(true)
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...form,
+          paymentMode: selectedPayment,
+          items: items.map((item: any) => ({
+            id: item.id,
+            price: item.price,
+            discount: item.discount || 0,
+            quantity: item.quantity || 1,
+          })),
+        }),
+      })
+
+      const order = await res.json()
+
+      if (!res.ok) {
+        throw new Error(order.error || 'Failed to place order')
+      }
+
+      // Store order info for success page
+      sessionStorage.setItem('lastOrder', JSON.stringify({
+        orderId: order.orderId,
+        totalAmount: order.totalAmount,
+        email: form.email,
+      }))
+
+      clearCart()
+      router.push('/checkout/success')
+    } catch (err: any) {
+      toast.error(err.message || 'Something went wrong')
+    } finally {
+      setPlacing(false)
+    }
   }
 
   if (!mounted) return null
@@ -55,29 +112,46 @@ export default function CheckoutPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <input
                   type="text"
-                  placeholder="Full Name"
+                  placeholder="Full Name *"
+                  value={form.name}
+                  onChange={(e) => updateField('name', e.target.value)}
+                  className="bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg p-3 md:p-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none transition-colors text-sm"
+                />
+                <input
+                  type="email"
+                  placeholder="Email (optional)"
+                  value={form.email}
+                  onChange={(e) => updateField('email', e.target.value)}
                   className="bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg p-3 md:p-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none transition-colors text-sm"
                 />
                 <input
                   type="tel"
-                  placeholder="Phone Number"
-                  className="bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg p-3 md:p-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none transition-colors text-sm"
+                  placeholder="Phone Number *"
+                  value={form.phone}
+                  onChange={(e) => updateField('phone', e.target.value)}
+                  className="bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg p-3 md:p-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none transition-colors text-sm sm:col-span-1"
                 />
                 <div className="sm:col-span-2">
                   <textarea
-                    placeholder="Complete Address"
+                    placeholder="Complete Address *"
                     rows={3}
+                    value={form.address}
+                    onChange={(e) => updateField('address', e.target.value)}
                     className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg p-3 md:p-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none transition-colors text-sm resize-none"
                   />
                 </div>
                 <input
                   type="text"
-                  placeholder="City"
+                  placeholder="City *"
+                  value={form.city}
+                  onChange={(e) => updateField('city', e.target.value)}
                   className="bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg p-3 md:p-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none transition-colors text-sm"
                 />
                 <input
                   type="text"
-                  placeholder="PIN Code"
+                  placeholder="PIN Code *"
+                  value={form.pincode}
+                  onChange={(e) => updateField('pincode', e.target.value)}
                   className="bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg p-3 md:p-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none transition-colors text-sm"
                 />
               </div>
@@ -136,7 +210,7 @@ export default function CheckoutPage() {
                       <p className="text-sm text-[var(--text-primary)] truncate">{item.name}</p>
                       <p className="text-xs text-[var(--text-muted)]">Qty: {item.quantity || 1}</p>
                     </div>
-                    <span className="text-sm font-bold text-[var(--text-primary)]">₹{item.price - (item.discount || 0)}</span>
+                    <span className="text-sm font-bold text-[var(--text-primary)]">₹{(item.price - (item.discount || 0)) * (item.quantity || 1)}</span>
                   </div>
                 ))}
               </div>
@@ -164,7 +238,7 @@ export default function CheckoutPage() {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-[var(--text-primary)] truncate">{item.name}</p>
                     </div>
-                    <span className="text-xs font-bold text-[var(--text-primary)]">₹{item.price - (item.discount || 0)}</span>
+                    <span className="text-xs font-bold text-[var(--text-primary)]">₹{(item.price - (item.discount || 0)) * (item.quantity || 1)}</span>
                   </div>
                 ))}
                 {items.length > 3 && (
@@ -175,7 +249,7 @@ export default function CheckoutPage() {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm text-[var(--text-primary)]/80">
                   <span>Subtotal</span>
-                  <span>₹{subtotal}</span>
+                  <span>₹{subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm text-[var(--text-primary)]/80">
                   <span>Shipping</span>
@@ -185,14 +259,22 @@ export default function CheckoutPage() {
 
               <div className="flex justify-between items-center py-4 border-t border-white/20 mb-6">
                 <span className="text-[var(--text-primary)] font-bold">Total</span>
-                <span className="text-3xl font-black text-[var(--text-primary)]">₹{total}</span>
+                <span className="text-3xl font-black text-[var(--text-primary)]">₹{total.toLocaleString()}</span>
               </div>
 
               <button
                 onClick={handlePlaceOrder}
-                className="w-full bg-white text-[var(--accent)] py-4 rounded-lg font-black uppercase tracking-wider text-sm hover:bg-black hover:text-[var(--text-primary)] transition-all"
+                disabled={placing}
+                className="w-full bg-white text-[var(--accent)] py-4 rounded-lg font-black uppercase tracking-wider text-sm hover:bg-black hover:text-[var(--text-primary)] transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Place Order
+                {placing ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    Placing Order...
+                  </>
+                ) : (
+                  'Place Order'
+                )}
               </button>
 
               <div className="flex items-center justify-center gap-2 mt-4 text-[10px] text-[var(--text-primary)]/60 uppercase tracking-wider">

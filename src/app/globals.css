@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+a, button, [role="button"] {
+  cursor: pointer;
+}
+
 /*
   Color Palette: Crimson, Black, Romantic, Modern, Minimalist
   - Crimson Depth: #710014
@@ -19,8 +23,8 @@
   --text-secondary: #4a4a4a;
   --text-muted: #6b6b6b;
 
-  --border-color: #161616;
-  --border-light: rgba(22, 22, 22, 0.35);
+  --border-color: rgba(22, 22, 22, 0.08);
+  --border-light: rgba(22, 22, 22, 0.05);
 
   /* Light mode: Warm Sand as main accent */
   --accent: #B38F6F;
@@ -35,7 +39,7 @@
   /* Add to Cart button: Black */
   --btn-cart-bg: #161616;
   --btn-cart-text: #F2F1ED;
-  --btn-cart-hover-bg: #B38F6F;
+  --btn-cart-hover-bg: #9a001f;
   --btn-cart-hover-text: #ffffff;
 
   --sand: #B38F6F;
@@ -97,9 +101,9 @@
   --nav-bg: #1e1e1e;
   --brand-banner-bg: #252525;
 
-  /* Topbar: white in dark mode */
-  --topbar-bg: #F2F1ED;
-  --topbar-text: #161616;
+  /* Topbar: match brand banner in dark mode */
+  --topbar-bg: #2e2e2e;
+  --topbar-text: #F2F1ED;
 
   --success: #22c55e;
   --warning: #eab308;
@@ -161,19 +165,6 @@ h1, h2, h3 {
   background: var(--accent-hover);
 }
 
-/* Banner Slider Animations */
-@keyframes kenburns {
-  0% {
-    transform: scale(1) translate(0, 0);
-  }
-  50% {
-    transform: scale(1.1) translate(-1%, -1%);
-  }
-  100% {
-    transform: scale(1.05) translate(1%, 0);
-  }
-}
-
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -194,81 +185,6 @@ h1, h2, h3 {
   }
 }
 
-@keyframes progress {
-  from {
-    width: 0%;
-  }
-  to {
-    width: 100%;
-  }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 20px var(--crimson), 0 0 40px transparent;
-  }
-  50% {
-    box-shadow: 0 0 30px var(--crimson), 0 0 60px var(--crimson);
-  }
-}
-
-@keyframes slideInFromBottom {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes bounce-subtle {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-/* Product Card Specific Styles */
-.product-card-image {
-  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.product-card-image:hover {
-  transform: scale(1.1);
-}
-
-/* Line Clamp Utility */
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
 /* Gradient Text Animation */
 .gradient-text-animate {
   background: linear-gradient(90deg, var(--sand), var(--crimson), var(--sand));
@@ -278,55 +194,4 @@ h1, h2, h3 {
   color: transparent;
   animation: shimmer 3s linear infinite;
 }
-
-/* Premium Card Hover Effects */
-.premium-card {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.premium-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-/* Button Ripple Effect */
-.btn-ripple {
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-ripple::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
-  transform: scale(0);
-  opacity: 0;
-  transition: transform 0.5s, opacity 0.3s;
-}
-
-.btn-ripple:active::after {
-  transform: scale(2);
-  opacity: 1;
-  transition: transform 0s, opacity 0s;
-}
-
-/* Image Hover Zoom */
-.img-zoom {
-  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.group:hover .img-zoom {
-  transform: scale(1.1);
-}
-
-/* Stagger Animation for Grid Items */
-.stagger-animation > *:nth-child(1) { animation-delay: 0s; }
-.stagger-animation > *:nth-child(2) { animation-delay: 0.1s; }
-.stagger-animation > *:nth-child(3) { animation-delay: 0.2s; }
-.stagger-animation > *:nth-child(4) { animation-delay: 0.3s; }
-.stagger-animation > *:nth-child(5) { animation-delay: 0.4s; }
-.stagger-animation > *:nth-child(6) { animation-delay: 0.5s; }
-.stagger-animation > *:nth-child(7) { animation-delay: 0.6s; }
-.stagger-animation > *:nth-child(8) { animation-delay: 0.7s; }
 

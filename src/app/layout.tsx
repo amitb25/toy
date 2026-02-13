@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
+import CartBottomBar from "@/components/CartBottomBar";
 
 const inter = Inter({ subsets: ["latin"] });
 const monda = localFont({
@@ -43,6 +44,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <CartBottomBar />
         </ThemeProvider>
       </body>
     </html>

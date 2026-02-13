@@ -64,8 +64,8 @@ export default function ProductsAdmin() {
     try {
       const [productsRes, categoriesRes, brandsRes] = await Promise.all([
         fetch('/api/products?all=true'),
-        fetch('/api/categories'),
-        fetch('/api/brands')
+        fetch('/api/categories?all=true'),
+        fetch('/api/brands?all=true')
       ])
       const [productsData, categoriesData, brandsData] = await Promise.all([
         productsRes.json(),
@@ -353,8 +353,8 @@ export default function ProductsAdmin() {
 
       {/* Add/Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-bg-card border border-border rounded-2xl w-full max-w-2xl p-6 my-8 shadow-2xl">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-bg-card border border-border rounded-2xl w-full max-w-6xl p-6 my-8 shadow-2xl">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-black text-text-primary uppercase tracking-tight">
                 {editingProduct ? 'Edit Product' : 'Add New Product'}
@@ -364,162 +364,174 @@ export default function ProductsAdmin() {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="md:col-span-2">
-                  <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Product Name</label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
-                    placeholder="Enter product name"
-                    required
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Description</label>
-                  <textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none resize-none transition-all"
-                    placeholder="Enter product description"
-                    rows={3}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Category</label>
-                  <select
-                    value={formData.categoryId}
-                    onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                    className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
-                    required
-                  >
-                    <option value="">Select Category</option>
-                    {categories.map(cat => (
-                      <option key={cat.id} value={cat.id}>{cat.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Brand</label>
-                  <select
-                    value={formData.brandId}
-                    onChange={(e) => setFormData({ ...formData, brandId: e.target.value })}
-                    className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
-                    required
-                  >
-                    <option value="">Select Brand</option>
-                    {brands.map(brand => (
-                      <option key={brand.id} value={brand.id}>{brand.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Price (Rs.)</label>
-                  <input
-                    type="number"
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
-                    placeholder="0"
-                    min="0"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Discount (Rs.)</label>
-                  <input
-                    type="number"
-                    value={formData.discount}
-                    onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
-                    className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
-                    placeholder="0"
-                    min="0"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Stock</label>
-                  <input
-                    type="number"
-                    value={formData.stock}
-                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                    className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
-                    placeholder="0"
-                    min="0"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Age Group</label>
-                  <select
-                    value={formData.ageGroup}
-                    onChange={(e) => setFormData({ ...formData, ageGroup: e.target.value })}
-                    className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
-                  >
-                    <option value="All">All Ages</option>
-                    <option value="0-2">0-2 Years</option>
-                    <option value="3-5">3-5 Years</option>
-                    <option value="6-8">6-8 Years</option>
-                    <option value="8+">8+ Years</option>
-                    <option value="12+">12+ Years</option>
-                    <option value="14+">14+ Years</option>
-                    <option value="18+">18+ Years</option>
-                  </select>
-                </div>
-
-                <div className="md:col-span-2">
-                  <ImageUpload
-                    label="Product Images"
-                    multiple={true}
-                    values={formData.images}
-                    value=""
-                    onChange={() => {}}
-                    onMultipleChange={(urls) => setFormData({ ...formData, images: urls })}
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Safety Info (Optional)</label>
-                  <input
-                    type="text"
-                    value={formData.safetyInfo}
-                    onChange={(e) => setFormData({ ...formData, safetyInfo: e.target.value })}
-                    className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
-                    placeholder="Small parts. Not suitable for children under 3."
-                  />
-                </div>
-
-                <div className="flex items-center gap-6">
-                  <label className="flex items-center gap-3 cursor-pointer group">
+            <form onSubmit={handleSubmit}>
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* Left Column - Form Fields */}
+                <div className="flex-1 space-y-4">
+                  <div>
+                    <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Product Name</label>
                     <input
-                      type="checkbox"
-                      checked={formData.status}
-                      onChange={(e) => setFormData({ ...formData, status: e.target.checked })}
-                      className="w-5 h-5 rounded-lg border-2 border-border bg-bg-input text-green-500 focus:ring-green-500 focus:ring-offset-0"
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
+                      placeholder="Enter product name"
+                      required
                     />
-                    <span className="text-sm font-bold text-text-secondary group-hover:text-text-primary transition-colors">Active</span>
-                  </label>
-                  <label className="flex items-center gap-3 cursor-pointer group">
-                    <input
-                      type="checkbox"
-                      checked={formData.featured}
-                      onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                      className="w-5 h-5 rounded-lg border-2 border-border bg-bg-input text-yellow-500 focus:ring-yellow-500 focus:ring-offset-0"
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Description</label>
+                    <textarea
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none resize-none transition-all"
+                      placeholder="Enter product description"
+                      rows={3}
+                      required
                     />
-                    <span className="text-sm font-bold text-text-secondary group-hover:text-text-primary transition-colors">Featured</span>
-                  </label>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Category</label>
+                      <select
+                        value={formData.categoryId}
+                        onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+                        className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
+                        required
+                      >
+                        <option value="">Select Category</option>
+                        {categories.map(cat => (
+                          <option key={cat.id} value={cat.id}>{cat.name}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Brand</label>
+                      <select
+                        value={formData.brandId}
+                        onChange={(e) => setFormData({ ...formData, brandId: e.target.value })}
+                        className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
+                        required
+                      >
+                        <option value="">Select Brand</option>
+                        {brands.map(brand => (
+                          <option key={brand.id} value={brand.id}>{brand.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Price (Rs.)</label>
+                      <input
+                        type="number"
+                        value={formData.price}
+                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                        className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
+                        placeholder="0"
+                        min="0"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Discount (Rs.)</label>
+                      <input
+                        type="number"
+                        value={formData.discount}
+                        onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
+                        className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
+                        placeholder="0"
+                        min="0"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Stock</label>
+                      <input
+                        type="number"
+                        value={formData.stock}
+                        onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                        className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
+                        placeholder="0"
+                        min="0"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Age Group</label>
+                      <select
+                        value={formData.ageGroup}
+                        onChange={(e) => setFormData({ ...formData, ageGroup: e.target.value })}
+                        className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
+                      >
+                        <option value="All">All Ages</option>
+                        <option value="0-2">0-2 Years</option>
+                        <option value="3-5">3-5 Years</option>
+                        <option value="6-8">6-8 Years</option>
+                        <option value="8+">8+ Years</option>
+                        <option value="12+">12+ Years</option>
+                        <option value="14+">14+ Years</option>
+                        <option value="18+">18+ Years</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Safety Info</label>
+                      <input
+                        type="text"
+                        value={formData.safetyInfo}
+                        onChange={(e) => setFormData({ ...formData, safetyInfo: e.target.value })}
+                        className="w-full bg-bg-input border border-border rounded-xl px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none transition-all"
+                        placeholder="Small parts warning..."
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-6 pt-1">
+                    <label className="flex items-center gap-3 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={formData.status}
+                        onChange={(e) => setFormData({ ...formData, status: e.target.checked })}
+                        className="w-5 h-5 rounded-lg border-2 border-border bg-bg-input text-green-500 focus:ring-green-500 focus:ring-offset-0"
+                      />
+                      <span className="text-sm font-bold text-text-secondary group-hover:text-text-primary transition-colors">Active</span>
+                    </label>
+                    <label className="flex items-center gap-3 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={formData.featured}
+                        onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                        className="w-5 h-5 rounded-lg border-2 border-border bg-bg-input text-yellow-500 focus:ring-yellow-500 focus:ring-offset-0"
+                      />
+                      <span className="text-sm font-bold text-text-secondary group-hover:text-text-primary transition-colors">Featured</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Right Column - Images */}
+                <div className="lg:w-[380px] flex-shrink-0">
+                  <div className="lg:sticky lg:top-0">
+                    <ImageUpload
+                      label="Product Images"
+                      multiple={true}
+                      values={formData.images}
+                      value=""
+                      onChange={() => {}}
+                      onMultipleChange={(urls) => setFormData({ ...formData, images: urls })}
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-3 pt-6 mt-6 border-t border-border">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}

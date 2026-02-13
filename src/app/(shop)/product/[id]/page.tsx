@@ -1,10 +1,10 @@
 'use client'
 
-import { Star, ShieldCheck, Truck, RotateCcw, Heart, Plus, Minus, ArrowLeft } from 'lucide-react'
+import { Star, ShieldCheck, Truck, RotateCcw, Heart, Plus, Minus, ArrowLeft, ZoomIn, ZoomOut } from 'lucide-react'
 import Loader from '@/components/Loader'
 import { useCartStore } from '@/lib/store/useCartStore'
 import { useWishlistStore } from '@/lib/store/useWishlistStore'
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect, useRef, use } from 'react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 
@@ -15,6 +15,13 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
   const [qty, setQty] = useState(1)
   const [product, setProduct] = useState<any>(null)
   const [mounted, setMounted] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(0)
+  const [isZoomed, setIsZoomed] = useState(false)
+  const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 })
+  const [mobileZoom, setMobileZoom] = useState(false)
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 })
+  const [showCursor, setShowCursor] = useState(false)
+  const imageRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -43,8 +50,8 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
     const imgs = product.images ? JSON.parse(product.images) : []
     toast.success(
       (t) => (
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl overflow-hidden bg-[var(--bg-secondary)] flex-shrink-0 border border-[var(--sand)]/30">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-lg overflow-hidden bg-[var(--bg-secondary)] flex-shrink-0 border border-[var(--sand)]/30">
             <img
               src={imgs[0] || 'https://images.unsplash.com/photo-1608889175123-8ee362201f81?q=80&w=100'}
               alt={product.name}
@@ -52,21 +59,21 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
             />
           </div>
           <div>
-            <p className="font-bold text-[var(--text-primary)]">Added to Cart!</p>
-            <p className="text-xs text-[var(--text-muted)] line-clamp-1">{product.name}</p>
+            <p className="font-bold text-sm text-[var(--text-primary)]">Added to Cart!</p>
+            <p className="text-[11px] text-[var(--text-muted)] line-clamp-1">{product.name}</p>
           </div>
         </div>
       ),
       {
-        duration: 3000,
+        duration: 2000,
         position: 'bottom-right',
         style: {
           background: 'var(--bg-card)',
           color: 'var(--text-primary)',
-          padding: '16px 20px',
-          borderRadius: '16px',
+          padding: '10px 14px',
+          borderRadius: '14px',
           border: '2px solid var(--sand)',
-          boxShadow: '0 20px 50px rgba(0,0,0,0.15)',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
         },
       }
     )
@@ -84,25 +91,115 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
           {/* Images */}
           <div className="w-full lg:w-1/2">
-            <div className="aspect-square bg-[var(--bg-card)] rounded-xl overflow-hidden mb-4">
+            {/* Main Image with Zoom */}
+            <div
+              ref={imageRef}
+              className="relative aspect-square bg-[var(--bg-card)] rounded-xl overflow-hidden mb-4 cursor-none select-none touch-manipulation"
+              onMouseEnter={() => { setIsZoomed(true); setShowCursor(true) }}
+              onMouseLeave={() => { setIsZoomed(false); setShowCursor(false) }}
+              onMouseMove={(e) => {
+                if (!imageRef.current) return
+                const rect = imageRef.current.getBoundingClientRect()
+                const x = ((e.clientX - rect.left) / rect.width) * 100
+                const y = ((e.clientY - rect.top) / rect.height) * 100
+                setZoomPos({ x, y })
+                setCursorPos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+              }}
+              onTouchEnd={(e) => {
+                if (!imageRef.current || mobileZoom) return
+                // Zoom in at tap position
+                const touch = e.changedTouches[0]
+                const rect = imageRef.current.getBoundingClientRect()
+                const x = ((touch.clientX - rect.left) / rect.width) * 100
+                const y = ((touch.clientY - rect.top) / rect.height) * 100
+                setZoomPos({ x, y })
+                setMobileZoom(true)
+              }}
+              onTouchMove={(e) => {
+                if (!mobileZoom || !imageRef.current) return
+                const touch = e.touches[0]
+                const rect = imageRef.current.getBoundingClientRect()
+                const x = Math.min(100, Math.max(0, ((touch.clientX - rect.left) / rect.width) * 100))
+                const y = Math.min(100, Math.max(0, ((touch.clientY - rect.top) / rect.height) * 100))
+                setZoomPos({ x, y })
+              }}
+            >
               <img
-                src={images[0] || 'https://images.unsplash.com/photo-1608889175123-8ee362201f81?q=80&w=500'}
+                src={images[selectedImage] || 'https://images.unsplash.com/photo-1608889175123-8ee362201f81?q=80&w=500'}
                 alt={product.name}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover transition-transform duration-300"
+                style={(isZoomed || mobileZoom) ? {
+                  transform: 'scale(2.5)',
+                  transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
+                } : undefined}
+                draggable={false}
               />
-            </div>
-            {/* Thumbnails */}
-            <div className="grid grid-cols-4 gap-2">
-              {[0, 1, 2, 3].map((i) => (
-                <div key={i} className="aspect-square bg-[var(--bg-card)] rounded-lg overflow-hidden border-2 border-transparent hover:border-[var(--accent)] cursor-pointer transition-colors">
-                  <img
-                    src={images[0] || 'https://images.unsplash.com/photo-1608889175123-8ee362201f81?q=80&w=200'}
-                    alt=""
-                    className="w-full h-full object-contain opacity-60 hover:opacity-100 transition-opacity"
-                  />
+
+              {/* Custom Zoom Cursor - Desktop */}
+              {showCursor && (
+                <div
+                  className="hidden md:flex pointer-events-none absolute z-30 items-center justify-center"
+                  style={{
+                    left: cursorPos.x,
+                    top: cursorPos.y,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <div className={`relative w-12 h-12 rounded-full border-2 backdrop-blur-md transition-all duration-300 ${isZoomed ? 'border-[var(--sand)] bg-[var(--sand)]/15 scale-110' : 'border-white/60 bg-white/10'}`}>
+                    {/* Plus icon */}
+                    <span className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-[2px] rounded-full transition-colors duration-300 ${isZoomed ? 'bg-[var(--sand)]' : 'bg-white/90'}`} />
+                    <span className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-5 w-[2px] rounded-full transition-colors duration-300 ${isZoomed ? 'bg-[var(--sand)]' : 'bg-white/90'}`} />
+                    {/* Glow ring */}
+                    <div className={`absolute -inset-1 rounded-full transition-opacity duration-300 ${isZoomed ? 'opacity-100' : 'opacity-0'}`} style={{ boxShadow: '0 0 12px rgba(194,154,108,0.15), 0 0 24px rgba(194,154,108,0.08)' }} />
+                  </div>
                 </div>
-              ))}
+              )}
+
+              {/* Zoom hint - Desktop */}
+              <div className={`absolute bottom-3 right-3 hidden md:flex items-center gap-1.5 bg-black/60 backdrop-blur-sm text-white/80 text-xs px-3 py-1.5 rounded-full transition-opacity duration-300 ${isZoomed ? 'opacity-0' : 'opacity-100'}`}>
+                <ZoomIn size={14} />
+                <span>Hover to zoom</span>
+              </div>
+              {/* Zoom hint - Mobile (only when not zoomed) */}
+              {!mobileZoom && (
+                <div className="absolute bottom-3 right-3 flex md:hidden items-center gap-1.5 bg-black/60 backdrop-blur-sm text-white/80 text-xs px-3 py-1.5 rounded-full">
+                  <ZoomIn size={14} />
+                  <span>Tap to zoom</span>
+                </div>
+              )}
             </div>
+            {/* Zoom out button - Mobile (outside zoom container) */}
+            {mobileZoom && (
+              <button
+                onClick={() => setMobileZoom(false)}
+                className="flex md:hidden items-center justify-center gap-1.5 bg-black/60 backdrop-blur-sm text-white/80 text-xs px-3 py-1.5 rounded-full mt-2 mb-4 mx-auto active:scale-95 transition-transform"
+              >
+                <ZoomOut size={14} />
+                <span>Zoom Out</span>
+              </button>
+            )}
+            {/* Thumbnails */}
+            {images.length > 1 && (
+              <div className="grid grid-cols-4 gap-2">
+                {images.map((img: string, i: number) => (
+                  <div
+                    key={i}
+                    onClick={() => setSelectedImage(i)}
+                    className={`aspect-square bg-[var(--bg-card)] rounded-lg overflow-hidden border-2 cursor-pointer transition-all ${
+                      selectedImage === i
+                        ? 'border-[var(--accent)] ring-1 ring-[var(--accent)]/30'
+                        : 'border-transparent hover:border-[var(--accent)]/50'
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt=""
+                      className={`w-full h-full object-cover transition-opacity ${selectedImage === i ? 'opacity-100' : 'opacity-60 hover:opacity-100'}`}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Product Info */}
