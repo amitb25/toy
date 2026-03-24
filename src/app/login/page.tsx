@@ -1,9 +1,37 @@
 'use client'
 
+import { useState } from 'react'
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Shield, Mail, Lock, ArrowRight } from 'lucide-react'
+import { Shield, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react'
 
 export default function LoginPage() {
+  const router = useRouter()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+
+    const result = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    })
+
+    if (result?.error) {
+      setError('Invalid email or password')
+      setLoading(false)
+    } else {
+      router.push('/admin')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
@@ -18,13 +46,22 @@ export default function LoginPage() {
             <p className="mt-2 text-sm text-[var(--text-muted)]">Login to access your Avengers HQ account</p>
           </div>
 
+          {/* Error */}
+          {error && (
+            <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-bold text-center">
+              {error}
+            </div>
+          )}
+
           {/* Form */}
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" size={18} />
               <input
                 type="email"
                 placeholder="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg py-3 md:py-4 pl-12 pr-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none transition-colors"
                 required
               />
@@ -34,6 +71,8 @@ export default function LoginPage() {
               <input
                 type="password"
                 placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg py-3 md:py-4 pl-12 pr-4 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none transition-colors"
                 required
               />
@@ -47,8 +86,20 @@ export default function LoginPage() {
               <Link href="#" className="font-bold text-[var(--accent)] hover:text-[var(--text-primary)] transition-colors">Forgot password?</Link>
             </div>
 
-            <button className="w-full flex items-center justify-center gap-2 bg-[var(--accent)] text-[var(--text-primary)] py-3 md:py-4 rounded-lg font-black uppercase tracking-wider text-sm hover:bg-white hover:text-[var(--accent)] transition-all">
-              Login <ArrowRight size={18} />
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 bg-[var(--accent)] text-[var(--text-primary)] py-3 md:py-4 rounded-lg font-black uppercase tracking-wider text-sm hover:bg-white hover:text-[var(--accent)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" /> Logging in...
+                </>
+              ) : (
+                <>
+                  Login <ArrowRight size={18} />
+                </>
+              )}
             </button>
           </form>
 

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { LayoutDashboard, Box, Tags, ShoppingBag, Users, Settings, LogOut, Shield, Menu, X, Sun, Moon, Image, Megaphone, MessageCircle } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { signOut } from 'next-auth/react'
 import { Toaster } from 'react-hot-toast'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -138,13 +139,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         <div className="absolute bottom-0 w-full p-4 border-t border-border">
-          <Link
-            href="/"
-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-text-muted hover:bg-accent/10 hover:text-accent transition-colors"
+          <button
+            onClick={() => signOut({ callbackUrl: '/login' })}
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-text-muted hover:bg-accent/10 hover:text-accent transition-colors"
           >
             <LogOut size={18} />
-            Back to Store
-          </Link>
+            Logout
+          </button>
         </div>
       </aside>
 

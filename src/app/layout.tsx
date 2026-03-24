@@ -6,6 +6,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
 import CartBottomBar from "@/components/CartBottomBar";
+import AuthProvider from "@/components/AuthProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 const monda = localFont({
@@ -38,14 +39,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} ${monda.variable} antialiased`} style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
-        <ThemeProvider>
-          <Header />
-          <main>
-            {children}
-          </main>
-          <Footer />
-          <CartBottomBar />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            <Header />
+            <main>
+              {children}
+            </main>
+            <Footer />
+            <CartBottomBar />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
