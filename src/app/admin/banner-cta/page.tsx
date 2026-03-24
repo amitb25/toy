@@ -31,6 +31,8 @@ export default function BannerCTAAdmin() {
     image: '',
     buttonText: 'Shop Now',
     buttonLink: '',
+    showTitle: true,
+    showButton: true,
     active: true,
     order: 0
   })
