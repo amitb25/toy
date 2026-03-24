@@ -26,7 +26,7 @@ export default function Footer() {
             <div className="w-full lg:w-auto flex-1 max-w-lg">
               <div className="bg-[var(--pearl)]/5 backdrop-blur-sm border border-[var(--pearl)]/10 p-1 md:p-1.5 flex rounded-lg overflow-hidden">
                 <input type="email" placeholder="Enter your email" className="bg-transparent flex-1 px-3 md:px-4 outline-none text-[var(--pearl)] text-sm placeholder:text-[var(--pearl)]/40 min-w-0" suppressHydrationWarning />
-                <button className="bg-[var(--crimson)] text-[var(--pearl)] px-4 md:px-8 py-2.5 md:py-3 text-[10px] md:text-xs font-semibold uppercase tracking-wider hover:bg-[var(--sand)] hover:text-[var(--obsidian)] transition-all duration-300 cursor-pointer whitespace-nowrap">Subscribe</button>
+                <button className="bg-[var(--crimson)] text-[var(--pearl)] px-4 md:px-8 py-2.5 md:py-3 text-[10px] md:text-xs font-semibold uppercase tracking-wider hover:bg-[var(--sand)] hover:text-[var(--obsidian)] transition-all duration-300 cursor-pointer whitespace-nowrap" suppressHydrationWarning>Subscribe</button>
               </div>
             </div>
           </div>
