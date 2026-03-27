@@ -36,7 +36,7 @@ export default function AccountPage() {
               </div>
               <div className="text-center sm:text-left flex-1">
                 <h1 className="text-xl md:text-3xl font-black text-[var(--text-primary)] uppercase tracking-tight">Hello, Hero!</h1>
-                <p className="text-[var(--text-muted)] text-sm md:text-base mt-1">Welcome to your Avengers HQ dashboard</p>
+                <p className="text-[var(--text-muted)] text-sm md:text-base mt-1">Welcome to your Velcario dashboard</p>
               </div>
               <button className="flex items-center gap-2 bg-[var(--accent)]/10 border border-[var(--accent)]/30 px-4 py-2 rounded-lg text-sm font-bold text-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--text-primary)] transition-all">
                 <LogOut size={16} /> Logout

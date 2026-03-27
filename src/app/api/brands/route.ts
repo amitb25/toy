@@ -6,7 +6,7 @@ const prisma = globalForPrisma.prisma || new PrismaClient()
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 const sampleBrands = [
-  { id: '1', name: 'Avengers HQ', logo: null, type: 'OWN', status: true, _count: { products: 4 } },
+  { id: '1', name: 'Velcario', logo: null, type: 'OWN', status: true, _count: { products: 4 } },
   { id: '2', name: 'Hasbro', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Hasbro_logo.svg/200px-Hasbro_logo.svg.png', type: 'THIRD_PARTY', status: true, _count: { products: 2 } },
   { id: '3', name: 'Hot Toys', logo: null, type: 'THIRD_PARTY', status: true, _count: { products: 1 } },
   { id: '4', name: 'Funko', logo: null, type: 'THIRD_PARTY', status: true, _count: { products: 1 } }

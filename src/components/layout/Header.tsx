@@ -151,10 +151,7 @@ export default function Header() {
             <Link href="/" className="shrink-0 group">
               <div className="flex items-baseline">
                 <span className="text-xl md:text-2xl font-bold text-[var(--text-primary)] tracking-tight">
-                  AVENGERS
-                </span>
-                <span className="text-xl md:text-2xl font-bold text-[var(--crimson)] tracking-tight">
-                  HQ
+                  VELCARIO
                 </span>
               </div>
             </Link>

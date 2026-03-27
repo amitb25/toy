@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const guestEmail = email || `guest_${phone.replace(/\D/g, '')}@avengershq.com`
+    const guestEmail = email || `guest_${phone.replace(/\D/g, '')}@velcario.com`
 
     // Upsert guest user
     const user = await prisma.user.upsert({

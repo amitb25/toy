@@ -18,7 +18,7 @@ const sampleProducts = [
     stock: 25,
     soldCount: 150,
     featured: true,
-    brand: { name: 'Avengers HQ', type: 'OWN' },
+    brand: { name: 'Velcario', type: 'OWN' },
     category: { name: 'Action Figures', slug: 'action-figures' }
   },
   {
@@ -32,7 +32,7 @@ const sampleProducts = [
     stock: 10,
     soldCount: 89,
     featured: true,
-    brand: { name: 'Avengers HQ', type: 'OWN' },
+    brand: { name: 'Velcario', type: 'OWN' },
     category: { name: 'Role Play', slug: 'role-play' }
   },
   {
@@ -74,7 +74,7 @@ const sampleProducts = [
     stock: 5,
     soldCount: 45,
     featured: true,
-    brand: { name: 'Avengers HQ', type: 'OWN' },
+    brand: { name: 'Velcario', type: 'OWN' },
     category: { name: 'Collectibles', slug: 'collectibles' }
   },
   {
@@ -102,7 +102,7 @@ const sampleProducts = [
     stock: 20,
     soldCount: 120,
     featured: true,
-    brand: { name: 'Avengers HQ', type: 'OWN' },
+    brand: { name: 'Velcario', type: 'OWN' },
     category: { name: 'Collectibles', slug: 'collectibles' }
   },
   {

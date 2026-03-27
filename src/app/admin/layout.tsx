@@ -158,7 +158,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Menu size={24} />
             </button>
             <div className="text-xs md:text-sm font-bold text-text-muted uppercase tracking-widest">
-              <span className="hidden sm:inline">Avengers HQ /</span> <span className="text-text-primary">Admin Panel</span>
+              <span className="hidden sm:inline">Velcario /</span> <span className="text-text-primary">Admin Panel</span>
             </div>
           </div>
           <div className="flex items-center gap-3 md:gap-4">

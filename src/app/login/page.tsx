@@ -43,7 +43,7 @@ export default function LoginPage() {
               <Shield size={32} />
             </div>
             <h2 className="text-2xl md:text-3xl font-black text-[var(--text-primary)] uppercase tracking-tight">Welcome Back</h2>
-            <p className="mt-2 text-sm text-[var(--text-muted)]">Login to access your Avengers HQ account</p>
+            <p className="mt-2 text-sm text-[var(--text-muted)]">Login to access your Velcario account</p>
           </div>
 
           {/* Error */}

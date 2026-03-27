@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Smartphone, ShieldCheck, Zap, Bell } from 'lucide-react'
 import { useEffect, useState, useRef, useCallback } from 'react'
 import ProductCard from '@/components/ProductCard'
 import QuickView from '@/components/QuickView'
@@ -227,7 +227,132 @@ export default function Home() {
         <CategorySlider categories={activeCategories} />
       )}
 
-      {/* 3. OUR BRANDS SECTION - Always shows after categories */}
+      {/* 3. DOWNLOAD APP SECTION */}
+      <section className="py-16 md:py-24 bg-[var(--obsidian)] relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--crimson)]/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[var(--sand)]/8 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4" />
+
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+
+            {/* Left - Content */}
+            <div>
+              <div className="inline-flex items-center gap-3 bg-[var(--sand)]/10 backdrop-blur-md border border-[var(--sand)]/30 rounded-full px-5 py-2.5 mb-6">
+                <span className="relative flex h-2 w-2">
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--sand)]"></span>
+                </span>
+                <span className="text-[var(--sand)] text-[11px] font-bold uppercase tracking-[0.3em]">Mobile App</span>
+              </div>
+
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-extralight text-[var(--pearl)] tracking-tight mb-4 leading-[1.1]">
+                Shop On <br />
+                <span className="font-black text-[var(--sand)]">The Go</span>
+              </h2>
+
+              <p className="text-[var(--pearl)]/50 text-sm md:text-base max-w-md leading-relaxed mb-8">
+                Get exclusive deals, instant notifications, and a seamless shopping experience right from your pocket.
+              </p>
+
+              {/* Features */}
+              <div className="grid grid-cols-2 gap-4 mb-10">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--crimson)]/20 flex items-center justify-center flex-shrink-0">
+                    <Zap size={18} className="text-[var(--sand)]" />
+                  </div>
+                  <div>
+                    <h4 className="text-[var(--pearl)] text-sm font-bold mb-0.5">Fast & Smooth</h4>
+                    <p className="text-[var(--pearl)]/40 text-xs">Lightning fast experience</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--crimson)]/20 flex items-center justify-center flex-shrink-0">
+                    <Bell size={18} className="text-[var(--sand)]" />
+                  </div>
+                  <div>
+                    <h4 className="text-[var(--pearl)] text-sm font-bold mb-0.5">Deal Alerts</h4>
+                    <p className="text-[var(--pearl)]/40 text-xs">Never miss a sale</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--crimson)]/20 flex items-center justify-center flex-shrink-0">
+                    <ShieldCheck size={18} className="text-[var(--sand)]" />
+                  </div>
+                  <div>
+                    <h4 className="text-[var(--pearl)] text-sm font-bold mb-0.5">Secure Pay</h4>
+                    <p className="text-[var(--pearl)]/40 text-xs">100% safe checkout</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--crimson)]/20 flex items-center justify-center flex-shrink-0">
+                    <Smartphone size={18} className="text-[var(--sand)]" />
+                  </div>
+                  <div>
+                    <h4 className="text-[var(--pearl)] text-sm font-bold mb-0.5">Easy Track</h4>
+                    <p className="text-[var(--pearl)]/40 text-xs">Track orders live</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Download Button */}
+              <Link
+                href="/download-app"
+                className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)] hover:scale-105"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
+                <Smartphone size={18} className="relative" />
+                <span className="relative">Download Our App</span>
+                <ArrowRight size={16} className="relative group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Right - Phone Mockup */}
+            <div className="relative flex justify-center">
+              {/* Glow behind phone */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-64 h-64 md:w-80 md:h-80 bg-[var(--crimson)]/15 rounded-full blur-[80px]" />
+              </div>
+
+              {/* Phone Frame */}
+              <div className="relative w-[240px] md:w-[280px]">
+                <div className="relative bg-[#1a1a1a] rounded-[40px] p-3 shadow-2xl shadow-black/50 border border-white/10">
+                  {/* Notch */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-[#1a1a1a] rounded-b-2xl z-10" />
+
+                  {/* Screen */}
+                  <div className="rounded-[28px] overflow-hidden bg-gradient-to-b from-[var(--crimson)] via-[#1a0008] to-[var(--obsidian)] aspect-[9/19.5] flex flex-col items-center justify-center p-6">
+                    {/* App content mockup */}
+                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-[var(--sand)] to-[var(--crimson)] flex items-center justify-center mb-4 shadow-lg">
+                      <span className="text-white text-xl md:text-2xl font-black" style={{ fontFamily: 'var(--font-heading)' }}>V</span>
+                    </div>
+                    <h3 className="text-white text-sm font-bold tracking-wider mb-1" style={{ fontFamily: 'var(--font-heading)' }}>VELCARIO</h3>
+                    <p className="text-white/40 text-[9px] tracking-widest uppercase">Premium Store</p>
+
+                    {/* Fake UI elements */}
+                    <div className="w-full mt-6 space-y-2.5">
+                      <div className="h-2 bg-white/10 rounded-full w-full" />
+                      <div className="h-2 bg-white/10 rounded-full w-3/4" />
+                      <div className="flex gap-2 mt-4">
+                        <div className="h-16 bg-white/5 rounded-xl flex-1" />
+                        <div className="h-16 bg-white/5 rounded-xl flex-1" />
+                      </div>
+                      <div className="flex gap-2">
+                        <div className="h-16 bg-white/5 rounded-xl flex-1" />
+                        <div className="h-16 bg-white/5 rounded-xl flex-1" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Reflection effect */}
+                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-[80%] h-8 bg-[var(--sand)]/10 blur-xl rounded-full" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. OUR BRANDS SECTION - Always shows after categories */}
       <section className="py-20 md:py-32 bg-[var(--bg-primary)] relative overflow-hidden">
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           {/* Section Header - Premium Design */}
@@ -292,7 +417,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. CTA BANNER - FULL WIDTH IMAGE WITH TITLE */}
+      {/* 5. CTA BANNER - FULL WIDTH IMAGE WITH TITLE */}
       {bannerCTAs.length > 0 && (
         <section className="w-full px-4 md:px-6 py-8">
           {bannerCTAs.map((cta) => (

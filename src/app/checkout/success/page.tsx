@@ -33,7 +33,7 @@ export default function OrderSuccessPage() {
 
           <h1 className="text-2xl md:text-4xl font-black text-[var(--text-primary)] uppercase tracking-tight">Order Confirmed!</h1>
           <p className="mt-4 text-sm md:text-base text-[var(--text-secondary)]">
-            Thank you for shopping at Avengers HQ. Your heroes are being assembled!
+            Thank you for shopping at Velcario. Your heroes are being assembled!
           </p>
 
           {/* Order Details Card */}

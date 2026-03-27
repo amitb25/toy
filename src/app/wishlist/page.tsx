@@ -84,7 +84,7 @@ export default function WishlistPage() {
                   {/* Content */}
                   <div className="p-4">
                     <p className="text-[10px] font-black uppercase text-[var(--accent)] tracking-wider mb-1">
-                      {item.brand?.name || 'Avengers HQ'}
+                      {item.brand?.name || 'Velcario'}
                     </p>
                     <h3 className="font-bold text-[var(--text-primary)] mb-3 line-clamp-2">{item.name}</h3>
 

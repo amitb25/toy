@@ -82,7 +82,7 @@ export default function CartPage() {
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-[10px] font-bold text-[var(--accent)] uppercase tracking-wider">{item.brand?.name || 'Avengers HQ'}</p>
+                      <p className="text-[10px] font-bold text-[var(--accent)] uppercase tracking-wider">{item.brand?.name || 'Velcario'}</p>
                       <h3 className="text-sm md:text-lg font-bold text-[var(--text-primary)] truncate">{item.name}</h3>
 
                       {/* Mobile Price */}

@@ -204,7 +204,7 @@ export default function ProductCard({ product, onQuickView, variant = 'default' 
         {/* Brand */}
         <div className="flex items-center justify-between gap-1">
           <p className="text-[9px] md:text-[10px] font-bold uppercase text-[var(--price-color)] tracking-wider truncate">
-            {product.brand?.name || 'Avengers HQ'}
+            {product.brand?.name || 'Velcario'}
           </p>
           {product.category && (
             <span className="text-[8px] md:text-[9px] font-medium text-[var(--text-muted)] bg-[var(--bg-secondary)] px-1.5 md:px-2 py-0.5 rounded-full whitespace-nowrap">
