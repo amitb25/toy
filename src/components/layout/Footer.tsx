@@ -38,7 +38,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
           <div className="col-span-2 lg:col-span-2">
             <div className="text-xl md:text-3xl font-light tracking-tight mb-3 md:mb-4">
-              <span className="font-bold">AVENGERS</span><span className="text-[var(--crimson)]">HQ</span>
+              <span className="font-bold">VELCARIO</span>
             </div>
             <p className="text-[var(--pearl)]/60 text-xs md:text-sm leading-relaxed mb-4 md:mb-6 max-w-sm">Your ultimate destination for premium collectibles and exclusive merchandise.</p>
             <div className="flex gap-2 md:gap-3">
@@ -77,7 +77,7 @@ export default function Footer() {
             <h4 className="text-[var(--sand)] font-bold uppercase tracking-wider text-xs md:text-sm mb-4 md:mb-6">Contact</h4>
             <ul className="space-y-2 md:space-y-3 text-[var(--pearl)]/60 text-xs md:text-sm">
               <li>Stark Tower, New York</li>
-              <li>hello@avengershq.com</li>
+              <li>hello@velcario.com</li>
               <li>+1 (800) AVENGER</li>
             </ul>
           </div>
@@ -88,7 +88,7 @@ export default function Footer() {
       <div className="border-t border-[var(--pearl)]/10">
         <div className="container mx-auto px-4 md:px-6 py-4 md:py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
-            <p className="text-[var(--pearl)]/40 text-[10px] md:text-xs order-3 md:order-1">© 2026 Avengers HQ. All rights reserved.</p>
+            <p className="text-[var(--pearl)]/40 text-[10px] md:text-xs order-3 md:order-1">© 2026 Velcario. All rights reserved.</p>
             <div className="flex items-center gap-4 md:gap-6 order-1 md:order-2">
               {[
                 { label: 'Privacy', href: '/privacy' },

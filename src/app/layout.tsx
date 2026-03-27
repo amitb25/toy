@@ -27,8 +27,8 @@ const monda = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Avengers HQ | Premium Marvel Collectibles",
-  description: "Your ultimate destination for premium Marvel collectibles, action figures, and superhero merchandise.",
+  title: "Velcario | Premium Collectibles",
+  description: "Your ultimate destination for premium collectibles, action figures, and merchandise.",
 };
 
 export default function RootLayout({

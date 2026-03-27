@@ -52,7 +52,7 @@ export default function SettingsAdmin() {
                 <label className="text-[10px] font-bold uppercase text-gray-500 tracking-wider">Store Name</label>
                 <input
                   type="text"
-                  defaultValue="Avengers HQ"
+                  defaultValue="Velcario"
                   className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg p-3 text-white focus:border-[#e23636] focus:outline-none transition-colors"
                 />
               </div>
@@ -60,7 +60,7 @@ export default function SettingsAdmin() {
                 <label className="text-[10px] font-bold uppercase text-gray-500 tracking-wider">Support Email</label>
                 <input
                   type="email"
-                  defaultValue="support@avengershq.com"
+                  defaultValue="support@velcario.com"
                   className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg p-3 text-white focus:border-[#e23636] focus:outline-none transition-colors"
                 />
               </div>
@@ -68,7 +68,7 @@ export default function SettingsAdmin() {
                 <label className="text-[10px] font-bold uppercase text-gray-500 tracking-wider">Phone Number</label>
                 <input
                   type="tel"
-                  defaultValue="+91 1800-AVENGERS"
+                  defaultValue="+91 1800-VELCARIO"
                   className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg p-3 text-white focus:border-[#e23636] focus:outline-none transition-colors"
                 />
               </div>

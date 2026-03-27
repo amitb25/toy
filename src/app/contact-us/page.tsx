@@ -140,7 +140,7 @@ export default function ContactUsPage() {
               <div className="space-y-6">
                 {[
                   { icon: MapPin, label: 'Address', value: 'Stark Tower, Manhattan,\nNew York, NY 10001' },
-                  { icon: Mail, label: 'Email', value: 'hello@avengershq.com' },
+                  { icon: Mail, label: 'Email', value: 'hello@velcario.com' },
                   { icon: Phone, label: 'Phone', value: '+1 (800) AVENGER' },
                   { icon: Clock, label: 'Hours', value: 'Mon – Fri: 9 AM – 8 PM\nSat – Sun: 10 AM – 6 PM' },
                 ].map((item) => (

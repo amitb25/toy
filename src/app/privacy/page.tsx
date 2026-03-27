@@ -58,11 +58,11 @@ export default function PrivacyPage() {
               },
               {
                 title: '6. Your Rights',
-                content: `You have the right to:\n• Access the personal data we hold about you\n• Request correction of inaccurate data\n• Request deletion of your data\n• Opt out of marketing communications\n• Request a copy of your data in a portable format\n\nTo exercise these rights, contact us at privacy@avengershq.com.`,
+                content: `You have the right to:\n• Access the personal data we hold about you\n• Request correction of inaccurate data\n• Request deletion of your data\n• Opt out of marketing communications\n• Request a copy of your data in a portable format\n\nTo exercise these rights, contact us at privacy@velcario.com.`,
               },
               {
                 title: '7. Contact Us',
-                content: `If you have questions about this privacy policy, please contact us at:\n\nAvengers HQ\nStark Tower, Manhattan, New York, NY 10001\nEmail: privacy@avengershq.com\nPhone: +1 (800) AVENGER`,
+                content: `If you have questions about this privacy policy, please contact us at:\n\nVelcario\nStark Tower, Manhattan, New York, NY 10001\nEmail: privacy@velcario.com\nPhone: +1 (800) VELCARIO`,
               },
             ].map((section) => (
               <div key={section.title}>

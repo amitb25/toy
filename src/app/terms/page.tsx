@@ -38,7 +38,7 @@ export default function TermsPage() {
             {[
               {
                 title: '1. Acceptance of Terms',
-                content: `By accessing or using Avengers HQ (the "Site"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Site.`,
+                content: `By accessing or using Velcario (the "Site"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Site.`,
               },
               {
                 title: '2. Use of the Site',
@@ -66,11 +66,11 @@ export default function TermsPage() {
               },
               {
                 title: '8. Intellectual Property',
-                content: `All content on the Site — including text, graphics, logos, images, and software — is the property of Avengers HQ or its licensors and is protected by intellectual property laws. You may not reproduce, distribute, or create derivative works from this content without our written permission.`,
+                content: `All content on the Site — including text, graphics, logos, images, and software — is the property of Velcario or its licensors and is protected by intellectual property laws. You may not reproduce, distribute, or create derivative works from this content without our written permission.`,
               },
               {
                 title: '9. Limitation of Liability',
-                content: `To the fullest extent permitted by law, Avengers HQ shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Site or products purchased through the Site.`,
+                content: `To the fullest extent permitted by law, Velcario shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the Site or products purchased through the Site.`,
               },
               {
                 title: '10. Changes to Terms',
@@ -78,7 +78,7 @@ export default function TermsPage() {
               },
               {
                 title: '11. Contact Us',
-                content: `If you have questions about these Terms of Service, please contact us at:\n\nAvengers HQ\nStark Tower, Manhattan, New York, NY 10001\nEmail: legal@avengershq.com\nPhone: +1 (800) AVENGER`,
+                content: `If you have questions about these Terms of Service, please contact us at:\n\nVelcario\nStark Tower, Manhattan, New York, NY 10001\nEmail: legal@velcario.com\nPhone: +1 (800) VELCARIO`,
               },
             ].map((section) => (
               <div key={section.title}>
