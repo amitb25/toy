@@ -114,10 +114,10 @@ export default function Home() {
                     Curated selection of premium products for the discerning collector
                   </p>
                   <div className="flex flex-wrap gap-4">
-                    <Link href="/products" className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)] hover:scale-105">
-                      <span className="absolute inset-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
+                    <Link href="/products" className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)]">
+                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
                       <span className="relative">Shop Now</span>
-                      <ArrowRight size={16} className="relative group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight size={16} className="relative group-hover:translate-x-3 group-hover:rotate-[-45deg] group-hover:scale-125 transition-transform duration-[2000ms] ease-in-out" />
                     </Link>
                     <Link href="/products" className="inline-flex items-center gap-3 border-2 border-[var(--pearl)]/30 text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-semibold uppercase text-xs md:text-sm tracking-wider hover:border-[var(--sand)] hover:text-[var(--sand)] transition-all duration-300 backdrop-blur-sm">
                       Explore More
@@ -174,10 +174,10 @@ export default function Home() {
                         </h1>
                         <p className="text-[var(--pearl)]/60 text-xs md:text-xl mb-4 md:mb-10 max-w-xl leading-relaxed">{banner.subtitle}</p>
                         <div className="flex flex-wrap gap-4">
-                          <Link href={banner.link || '/products'} className="group relative inline-flex items-center gap-2 md:gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-5 py-2.5 md:px-10 md:py-5 font-bold uppercase text-[10px] md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)] hover:scale-105">
-                            <span className="absolute inset-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
+                          <Link href={banner.link || '/products'} className="group relative inline-flex items-center gap-2 md:gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-5 py-2.5 md:px-10 md:py-5 font-bold uppercase text-[10px] md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)]">
+                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
                             <span className="relative">Shop Now</span>
-                            <ArrowRight size={14} className="relative group-hover:translate-x-1 transition-transform" />
+                            <ArrowRight size={14} className="relative group-hover:translate-x-3 group-hover:rotate-[-45deg] group-hover:scale-125 transition-transform duration-[2000ms] ease-in-out" />
                           </Link>
                         </div>
                       </div>
@@ -297,12 +297,12 @@ export default function Home() {
               {/* Download Button */}
               <Link
                 href="/download-app"
-                className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)] hover:scale-105"
+                className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)]"
               >
-                <span className="absolute inset-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
                 <Smartphone size={18} className="relative" />
                 <span className="relative">Download Our App</span>
-                <ArrowRight size={16} className="relative group-hover:translate-x-1 transition-transform" />
+                <ArrowRight size={16} className="relative group-hover:translate-x-3 group-hover:rotate-[-45deg] group-hover:scale-125 transition-transform duration-[2000ms] ease-in-out" />
               </Link>
             </div>
 
@@ -452,7 +452,7 @@ export default function Home() {
                     <div className={cta.showTitle !== false && cta.title ? 'mt-3 md:mt-10' : ''}>
                       <span className="inline-flex items-center gap-1.5 md:gap-2 bg-[var(--sand)] text-[var(--obsidian)] px-4 md:px-10 py-2 md:py-4 text-[8px] md:text-xs font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] rounded-sm group-hover:bg-white transition-all duration-300">
                         {cta.buttonText || 'Shop Now'}
-                        <svg className="w-2.5 h-2.5 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                        <svg className="w-2.5 h-2.5 md:w-4 md:h-4 group-hover:translate-x-3 group-hover:rotate-[-45deg] group-hover:scale-125 transition-transform duration-[2000ms] ease-in-out" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
                       </span>
                     </div>
                   )}
