@@ -94,9 +94,9 @@ export default function DownloadAppPage() {
     return () => clearInterval(interval)
   }, [phase])
 
-  // Trigger actual file download only when done
+  // Trigger actual file download immediately when downloading starts
   useEffect(() => {
-    if (phase !== 'done') return
+    if (phase !== 'downloading') return
     const link = document.createElement('a')
     link.href = '/velcario app/velcario.apk'
     link.download = 'velcario.apk'
@@ -318,9 +318,9 @@ export default function DownloadAppPage() {
               <div className="flex flex-wrap gap-4">
                 <button
                   onClick={startDownload}
-                  className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 rounded-xl font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)] hover:scale-105"
+                  className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 rounded-xl font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)]"
                 >
-                  <span className="absolute inset-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
                   <Download size={20} className="relative" />
                   <span className="relative">Download App</span>
                 </button>
@@ -466,9 +466,9 @@ export default function DownloadAppPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <button
               onClick={startDownload}
-              className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 rounded-xl font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)] hover:scale-105"
+              className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-[var(--crimson)] to-[#9a001f] text-[var(--pearl)] px-8 py-4 md:px-10 md:py-5 rounded-xl font-bold uppercase text-xs md:text-sm tracking-wider overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_var(--crimson)]"
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-[var(--sand)] to-[var(--crimson)] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
               <Download size={20} className="relative" />
               <span className="relative">Download App</span>
             </button>

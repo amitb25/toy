@@ -128,7 +128,7 @@ export default function CategoriesAdmin() {
         </div>
         <button
           onClick={openAddModal}
-          className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#710014] to-[#9a001f] px-5 py-3 font-bold text-white text-sm uppercase tracking-wider hover:shadow-lg hover:shadow-[#710014]/30 hover:scale-105 transition-all"
+          className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#710014] to-[#9a001f] px-5 py-3 font-bold text-white text-sm uppercase tracking-wider hover:shadow-lg hover:shadow-[#710014]/30 transition-all"
         >
           <Plus size={18} /> Add Category
         </button>
@@ -192,7 +192,7 @@ export default function CategoriesAdmin() {
                 <span className="text-sm font-medium text-text-secondary">{cat._count?.products || 0} Products</span>
                 <button
                   onClick={() => toggleEnabled(cat)}
-                  className={`rounded-full px-3 py-1.5 text-[10px] font-bold uppercase transition-all hover:scale-105 ${
+                  className={`rounded-full px-3 py-1.5 text-[10px] font-bold uppercase transition-all ${
                     cat.enabled
                       ? 'bg-green-500/15 text-green-600 border border-green-500/20 hover:bg-green-500/25'
                       : 'bg-red-500/15 text-red-600 border border-red-500/20 hover:bg-red-500/25'
@@ -266,7 +266,7 @@ export default function CategoriesAdmin() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-3.5 bg-gradient-to-r from-[#710014] to-[#9a001f] text-white rounded-xl font-bold hover:shadow-lg hover:shadow-[#710014]/30 hover:scale-[1.02] transition-all"
+                  className="flex-1 px-4 py-3.5 bg-gradient-to-r from-[#710014] to-[#9a001f] text-white rounded-xl font-bold hover:shadow-lg hover:shadow-[#710014]/30 transition-all"
                 >
                   {editingCategory ? 'Update Category' : 'Add Category'}
                 </button>

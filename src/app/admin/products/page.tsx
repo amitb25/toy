@@ -216,7 +216,7 @@ export default function ProductsAdmin() {
         </div>
         <button
           onClick={openAddModal}
-          className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#710014] to-[#9a001f] px-5 py-3 font-bold text-white text-sm uppercase tracking-wider hover:shadow-lg hover:shadow-[#710014]/30 hover:scale-105 transition-all"
+          className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#710014] to-[#9a001f] px-5 py-3 font-bold text-white text-sm uppercase tracking-wider hover:shadow-lg hover:shadow-[#710014]/30 transition-all"
         >
           <Plus size={18} /> Add Product
         </button>
@@ -318,7 +318,7 @@ export default function ProductsAdmin() {
                     <td className="px-4 md:px-6 py-4">
                       <button
                         onClick={() => toggleStatus(product)}
-                        className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase transition-all hover:scale-105 ${
+                        className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase transition-all ${
                           product.status
                             ? 'bg-green-500/15 text-green-600 border border-green-500/20 hover:bg-green-500/25'
                             : 'bg-red-500/15 text-red-600 border border-red-500/20 hover:bg-red-500/25'
@@ -541,7 +541,7 @@ export default function ProductsAdmin() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-3.5 bg-gradient-to-r from-[#710014] to-[#9a001f] text-white rounded-xl font-bold hover:shadow-lg hover:shadow-[#710014]/30 hover:scale-[1.02] transition-all"
+                  className="flex-1 px-4 py-3.5 bg-gradient-to-r from-[#710014] to-[#9a001f] text-white rounded-xl font-bold hover:shadow-lg hover:shadow-[#710014]/30 transition-all"
                 >
                   {editingProduct ? 'Update Product' : 'Add Product'}
                 </button>
