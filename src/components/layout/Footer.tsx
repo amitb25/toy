@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Image from 'next/image'
 
 export default function Footer() {
   const pathname = usePathname()
@@ -37,8 +38,14 @@ export default function Footer() {
       <div className="container mx-auto px-4 md:px-6 py-10 md:py-20 relative">
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
           <div className="col-span-2 lg:col-span-2">
-            <div className="text-xl md:text-3xl font-light tracking-tight mb-3 md:mb-4">
-              <span className="font-bold">VELCARIO</span>
+            <div className="relative h-8 md:h-10 w-36 mb-3 md:mb-4">
+              <Image
+                src="/img/logo/darkmode.png"
+                alt="VELCARIO"
+                fill
+                className="object-contain object-left"
+                priority
+              />
             </div>
             <p className="text-[var(--pearl)]/60 text-xs md:text-sm leading-relaxed mb-4 md:mb-6 max-w-sm">Your ultimate destination for premium collectibles and exclusive merchandise.</p>
             <div className="flex gap-2 md:gap-3">

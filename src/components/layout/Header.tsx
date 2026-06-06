@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { ShoppingCart, User, Search, Menu, X, Heart, Phone, Loader2 } from 'lucide-react'
 import { useCartStore } from '@/lib/store/useCartStore'
 import { useWishlistStore } from '@/lib/store/useWishlistStore'
+import { useThemeStore } from '@/lib/store/useThemeStore'
 import { useEffect, useState, useRef, useCallback } from 'react'
 import ThemeToggle from '@/components/ThemeToggle'
 import Image from 'next/image'
@@ -24,6 +25,7 @@ export default function Header() {
   const router = useRouter()
   const cartItems = useCartStore((state: any) => state.items)
   const wishlistItems = useWishlistStore((state) => state.items)
+  const { theme } = useThemeStore()
   const [mounted, setMounted] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -148,11 +150,20 @@ export default function Header() {
             </button>
 
             {/* Logo - Elegant */}
-            <Link href="/" className="shrink-0 group">
-              <div className="flex items-baseline">
-                <span className="text-xl md:text-2xl font-bold text-[var(--text-primary)] tracking-tight">
-                  VELCARIO
-                </span>
+            <Link href="/" className="shrink-0 group block">
+              <div className="flex items-center h-8 md:h-10">
+                {mounted ? (
+                  <Image
+                    src={theme === 'dark' ? '/img/logo/darkmode.png' : '/img/logo/lightmode.png'}
+                    alt="VELCARIO"
+                    width={150}
+                    height={40}
+                    className="h-full w-auto object-contain"
+                    priority
+                  />
+                ) : (
+                  <div className="w-[120px] md:w-[150px] h-8 md:h-10" />
+                )}
               </div>
             </Link>
 
